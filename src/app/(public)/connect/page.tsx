@@ -1,15 +1,13 @@
 'use client';
 
-import { Button } from "@/components/ui/button";
-import { useConnect } from "wagmi";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useAccount } from "wagmi";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Logo } from "@/components/logo";
+import { ConnectButton } from "@/components/connect-button";
 
 export default function ConnectPage() {
-    const { connectors, connect } = useConnect();
     const { isConnected } = useAccount();
     const router = useRouter();
 
@@ -29,16 +27,8 @@ export default function ConnectPage() {
                     <CardTitle>Connect Wallet</CardTitle>
                     <CardDescription>Choose a wallet to connect to the ANDE Network App.</CardDescription>
                 </CardHeader>
-                <CardContent className="grid gap-4">
-                    {connectors.map((connector) => (
-                        <Button
-                            key={connector.uid}
-                            onClick={() => connect({ connector })}
-                            size="lg"
-                        >
-                            Connect {connector.name}
-                        </Button>
-                    ))}
+                <CardContent className="grid gap-4 justify-center">
+                    <ConnectButton />
                 </CardContent>
             </Card>
         </div>

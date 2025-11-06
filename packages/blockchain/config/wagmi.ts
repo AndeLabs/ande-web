@@ -1,26 +1,14 @@
 
-import { createConfig, http } from 'wagmi';
+import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { andeNetwork } from './chains';
-import { metaMask, walletConnect } from 'wagmi/connectors';
-import type {Connector} from 'wagmi';
+import { metaMask } from 'wagmi/connectors';
 
-const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
-
-const connectors: Connector[] = [
-  metaMask(),
-];
-
-if (projectId) {
-  connectors.push(walletConnect({ projectId }));
-} else {
-    console.warn('NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID is not set, WalletConnect will not be available.');
-}
-
-export const wagmiConfig = createConfig({
+export const wagmiConfig = getDefaultConfig({
+  appName: 'ANDE Network',
+  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
   chains: [andeNetwork],
-  connectors,
-  transports: {
-    [andeNetwork.id]: http(),
-  },
   ssr: true,
+  connectors: [
+    metaMask,
+  ],
 });
