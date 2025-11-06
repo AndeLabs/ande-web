@@ -25,6 +25,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import Image from 'next/image';
+import placeholderImages from '@/lib/placeholder-images.json';
 
 const metrics = [
   {
@@ -90,7 +91,7 @@ export default function NetworkStats() {
     <>
       <section className="relative w-full h-[400px] overflow-hidden rounded-lg">
         <Image
-            src="https://images.unsplash.com/photo-1690029670479-9fee2fa120eb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxhYnN0cmFjdCUyMG5ldHdvcmt8ZW58MHx8fHwxNzYyNDI3NTg0fDA&ixlib=rb-4.1.0&q=80&w=1080"
+            src={placeholderImages.abstractNetwork.stats}
             alt="Abstract network"
             fill
             className="object-cover"

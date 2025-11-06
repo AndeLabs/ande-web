@@ -7,6 +7,7 @@ import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { Providers } from './providers';
 import { Inter } from 'next/font/google';
+import placeholderImages from '@/lib/placeholder-images.json';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
     description: 'A high-performance blockchain for the next generation of decentralized applications.',
     images: [
       {
-        url: 'https://images.unsplash.com/photo-1690029670479-9fee2fa120eb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxhYnN0cmFjdCUyMG5ldHdvcmt8ZW58MHx8fHwxNzYyNDI3NTg0fDA&ixlib=rb-4.1.0&q=80&w=1200',
+        url: placeholderImages.abstractNetwork.og,
         width: 1200,
         height: 630,
         alt: 'ANDE Network Abstract Background',
