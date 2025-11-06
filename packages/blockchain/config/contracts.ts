@@ -1,127 +1,74 @@
-import { andeNetwork } from './chains';
+import { getAndeChain } from './chains';
 
-export const ANDETokenDualityAddress = '0x00000000000000000000000000000000000000FD' as const;
+/**
+ * TESTNET DEPLOYMENT ADDRESSES (2025-11-06)
+ * Chain ID: 6174
+ * RPC: https://rpc.ande.network
+ * 
+ * All addresses are TESTNET ONLY
+ * Update when mainnet deployment is ready
+ */
 
-export const andeTokenDualityABI = [
-  {
-    "constant": true,
-    "inputs": [{"name": "_owner", "type": "address"}],
-    "name": "balanceOf",
-    "outputs": [{"name": "balance", "type": "uint256"}],
-    "type": "function"
+// TIER 1: Core Token Contract
+export const ANDETokenDualityAddress = '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707' as const;
+
+// TIER 1: Staking Contract
+export const AndeNativeStakingAddress = '0xa513E6E4b8f2a923D98304ec87F64353C4D5C853' as const;
+
+// TIER 1: Sequencer Registry
+export const AndeSequencerRegistryAddress = '0x610178dA211FEF7D417bC0e6FeD39F05609AD788' as const;
+
+// TIER 2: Governance - Timelock Controller
+export const AndeTimelockControllerAddress = '0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82' as const;
+
+// TIER 2: Governance - Governor (Pending Deployment)
+// Update this address once AndeGovernor is deployed
+export const AndeGovernorAddress = process.env.NEXT_PUBLIC_GOVERNOR_ADDRESS || ('0x0000000000000000000000000000000000000000' as const);
+
+/**
+ * Contract Configuration Object
+ * ABIs are fetched from the blockchain at runtime for security and reliability
+ * 
+ * Each contract entry includes:
+ * - address: Deployed contract address
+ * - chain: Network configuration
+ * - category: TIER 1 (Core) or TIER 2 (Governance)
+ */
+export const contractAddresses = {
+  andeToken: {
+    address: ANDETokenDualityAddress,
+    chain: getAndeChain(),
+    category: 'TIER_1_CORE',
+    name: 'ANDETokenDuality',
   },
-  {
-    "constant": false,
-    "inputs": [{"name": "_to", "type": "address"}, {"name": "_value", "type": "uint256"}],
-    "name": "transfer",
-    "outputs": [{"name": "", "type": "bool"}],
-    "type": "function"
+  andeStaking: {
+    address: AndeNativeStakingAddress,
+    chain: getAndeChain(),
+    category: 'TIER_1_CORE',
+    name: 'AndeNativeStaking',
   },
-  {
-    "constant": false,
-    "inputs": [{"name": "_spender", "type": "address"}, {"name": "_value", "type": "uint256"}],
-    "name": "approve",
-    "outputs": [{"name": "", "type": "bool"}],
-    "type": "function"
-  }
-] as const;
+  andeSequencer: {
+    address: AndeSequencerRegistryAddress,
+    chain: getAndeChain(),
+    category: 'TIER_1_CORE',
+    name: 'AndeSequencerRegistry',
+  },
+  andeTimelock: {
+    address: AndeTimelockControllerAddress,
+    chain: getAndeChain(),
+    category: 'TIER_2_GOVERNANCE',
+    name: 'AndeTimelockController',
+  },
+  andeGovernor: {
+    address: AndeGovernorAddress,
+    chain: getAndeChain(),
+    category: 'TIER_2_GOVERNANCE',
+    name: 'AndeGovernor',
+  },
+} as const;
 
-export const andeNativeStakingAddress = '0xTBD_AndeNativeStaking' as const;
-
-export const andeNativeStakingABI = [
-    {
-        "inputs": [
-            { "internalType": "uint256", "name": "amount", "type": "uint256" },
-            { "internalType": "uint8", "name": "poolId", "type": "uint8" }
-        ],
-        "name": "stake",
-        "outputs": [],
-        "stateMutability": "payable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            { "internalType": "uint256", "name": "amount", "type": "uint256" },
-            { "internalType": "uint8", "name": "poolId", "type": "uint8" }
-        ],
-        "name": "unstake",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [{ "internalType": "uint8", "name": "poolId", "type": "uint8" }],
-        "name": "claimRewards",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            { "internalType": "address", "name": "user", "type": "address" },
-            { "internalType": "uint8", "name": "poolId", "type": "uint8" }
-        ],
-        "name": "getStakedAmount",
-        "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-        "stateMutability": "view",
-        "type": "function"
-    }
-] as const;
-
-
-export const andeGovernorAddress = '0xTBD_AndeGovernor' as const;
-
-export const andeGovernorABI = [
-    {
-        "inputs": [
-            { "internalType": "address[]", "name": "targets", "type": "address[]" },
-            { "internalType": "uint256[]", "name": "values", "type": "uint256[]" },
-            { "internalType": "bytes[]", "name": "calldatas", "type": "bytes[]" },
-            { "internalType": "string", "name": "description", "type": "string" }
-        ],
-        "name": "propose",
-        "outputs": [{ "internalType": "uint256", "name": "proposalId", "type": "uint256" }],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            { "internalType": "uint256", "name": "proposalId", "type": "uint256" },
-            { "internalType": "uint8", "name": "support", "type": "uint8" }
-        ],
-        "name": "vote",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            { "internalType": "address[]", "name": "targets", "type": "address[]" },
-            { "internalType": "uint256[]", "name": "values", "type": "uint256[]" },
-            { "internalType": "bytes[]", "name": "calldatas", "type": "bytes[]" },
-            { "internalType": "bytes32", "name": "descriptionHash", "type": "bytes32" }
-        ],
-        "name": "execute",
-        "outputs": [],
-        "stateMutability": "payable",
-        "type": "function"
-    }
-] as const;
-
-export const contracts = {
-    andeTokenDuality: {
-        address: ANDETokenDualityAddress,
-        abi: andeTokenDualityABI,
-        chain: andeNetwork,
-    },
-    andeNativeStaking: {
-        address: andeNativeStakingAddress,
-        abi: andeNativeStakingABI,
-        chain: andeNetwork,
-    },
-    andeGovernor: {
-        address: andeGovernorAddress,
-        abi: andeGovernorABI,
-        chain: andeNetwork,
-    },
-};
+/**
+ * Type-safe contract addresses
+ */
+export type ContractKey = keyof typeof contractAddresses;
+export type ContractAddress = (typeof contractAddresses)[ContractKey];
