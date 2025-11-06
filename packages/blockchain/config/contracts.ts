@@ -23,7 +23,10 @@ export const AndeTimelockControllerAddress = '0x0DCd1Bf9A1b36cE34237eEaFef220932
 
 // TIER 2: Governance - Governor (Pending Deployment)
 // Update this address once AndeGovernor is deployed
-export const AndeGovernorAddress = process.env.NEXT_PUBLIC_GOVERNOR_ADDRESS || ('0x0000000000000000000000000000000000000000' as const);
+export const AndeGovernorAddress = process.env.NEXT_PUBLIC_GOVERNOR_ADDRESS || ('0x0000000000000000000000000000000000000' as const);
+
+// Export with camelCase for consistency
+export const andeGovernorAddress = AndeGovernorAddress;
 
 /**
  * Contract Configuration Object
