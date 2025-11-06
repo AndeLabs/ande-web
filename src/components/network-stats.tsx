@@ -24,7 +24,6 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Image from 'next/image';
 
 const metrics = [
@@ -48,7 +47,6 @@ export default function NetworkStats() {
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState<NetworkHealthOutput | null>(null);
   const { toast } = useToast();
-  const heroImage = PlaceHolderImages.find(img => img.id === 'hero-1');
 
   const handleAnalysis = async () => {
     setLoading(true);
@@ -91,15 +89,13 @@ export default function NetworkStats() {
   return (
     <>
       <section className="relative w-full h-[400px] overflow-hidden rounded-lg">
-        {heroImage && (
-          <Image
-            src={heroImage.imageUrl}
-            alt={heroImage.description}
+        <Image
+            src="https://images.unsplash.com/photo-1690029670479-9fee2fa120eb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxhYnN0cmFjdCUyMG5ldHdvcmt8ZW58MHx8fHwxNzYyNDI3NTg0fDA&ixlib=rb-4.1.0&q=80&w=1080"
+            alt="Abstract network"
             fill
             className="object-cover"
-            data-ai-hint={heroImage.imageHint}
+            data-ai-hint="abstract network"
           />
-        )}
         <div className="absolute inset-0 bg-hero-gradient opacity-80 mix-blend-multiply" />
         <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-primary-foreground p-4">
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter animate-float">

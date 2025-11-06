@@ -52,7 +52,8 @@ export function useStaking() {
         ],
         query: {
             enabled: !!address,
-            refetchInterval: 10000, // Refetch every 10 seconds
+            // Polling is handled by `watch:true` in parent components now
+            // refetchInterval: 10000, 
         }
     });
 

@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -96,22 +95,19 @@ function NetworkStats() {
 
 
 export default function Home() {
-  const heroImage = PlaceHolderImages.find(img => img.id === 'hero-1');
 
   return (
     <div className="flex flex-col overflow-hidden">
       {/* Hero Section */}
       <section className="relative w-full h-[80vh] min-h-[600px] overflow-hidden">
-        {heroImage && (
-          <Image
-            src={heroImage.imageUrl}
-            alt={heroImage.description}
+        <Image
+            src="https://images.unsplash.com/photo-1690029670479-9fee2fa120eb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxhYnN0cmFjdCUyMG5ldHdvcmt8ZW58MHx8fHwxNzYyNDI3NTg0fDA&ixlib=rb-4.1.0&q=80&w=1080"
+            alt="Abstract network"
             fill
             priority
             className="object-cover animate-gradient"
-            data-ai-hint={heroImage.imageHint}
+            data-ai-hint="abstract network"
           />
-        )}
         <div className="absolute inset-0 bg-hero-gradient opacity-90 mix-blend-multiply" />
         <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-primary-foreground p-4">
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter animate-float">
