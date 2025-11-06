@@ -1,7 +1,8 @@
 
-import { getDefaultConfig } from '@rainbow-me/rainbowkit';
+import { createConfig, http } from 'wagmi';
 import { andeNetwork } from './chains';
 import { metaMask } from 'wagmi/connectors';
+import { QueryClient } from '@tanstack/react-query';
 
 if (!process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID) {
   console.warn(
@@ -9,14 +10,31 @@ if (!process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID) {
   );
 }
 
-export const wagmiConfig = getDefaultConfig({
-  appName: 'ANDE Network',
-  // Providing a fallback projectId to prevent RainbowKit from throwing an error.
-  // WalletConnect will simply not work without a valid ID.
-  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || '00000000000000000000000000000000',
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5000, // 5 seconds
+      cacheTime: 1000 * 60 * 5, // 5 minutes
+      refetchOnWindowFocus: true,
+    },
+  },
+});
+
+export const wagmiConfig = createConfig({
   chains: [andeNetwork],
-  ssr: true,
   connectors: [
-    metaMask,
+    metaMask(),
+    // walletConnect({ 
+    //   projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || '00000000000000000000000000000000',
+    //   showQrModal: true 
+    // })
   ],
+  transports: {
+    [andeNetwork.id]: http('https://rpc.ande.network', {
+      batch: true,
+      retryCount: 3,
+      timeout: 10000,
+    })
+  },
+  ssr: true,
 });
