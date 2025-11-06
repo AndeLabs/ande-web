@@ -4,12 +4,16 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu } from 'lucide-react';
 import Link from 'next/link';
 import { ConnectButton } from '@/components/connect-button';
+import { DarkModeToggle } from './dark-mode-toggle';
 
 const navLinks = [
-  { href: '/dashboard', label: 'Dashboard' },
-  { href: '/explorer', label: 'Explorer' },
-  { href: '/faucet', label: 'Faucet' },
-  { href: '/stats', label: 'Stats' },
+  { href: '/about', label: 'About' },
+  { href: '/technology', label: 'Technology' },
+  { href: '/tokenomics', label: 'Tokenomics' },
+  { href: '/roadmap', label: 'Roadmap' },
+  { href: '/team', label: 'Team' },
+  { href: '/docs', label: 'Docs' },
+  { href: '/blog', label: 'Blog' },
 ];
 
 export function Header() {
@@ -62,7 +66,10 @@ export function Header() {
         </Sheet>
 
         <div className="flex flex-1 items-center justify-end space-x-2">
-          <ConnectButton />
+          <DarkModeToggle />
+          <Button asChild>
+            <a href="https://app.ande.network" target="_blank" rel="noopener noreferrer">Launch App</a>
+          </Button>
         </div>
       </div>
     </header>

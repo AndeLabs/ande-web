@@ -1,0 +1,10 @@
+export default function BlogPostPage({ params }: { params: { slug: string } }) {
+  return (
+    <div className="container mx-auto py-12 px-4">
+      <h1 className="text-4xl font-bold">Blog Post: {params.slug}</h1>
+      <p className="mt-4 text-lg text-muted-foreground">
+        The content for this blog post will be displayed here.
+      </p>
+    </div>
+  );
+}
