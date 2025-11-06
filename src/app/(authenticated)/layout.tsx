@@ -7,7 +7,13 @@ import { useEffect } from 'react';
 import { AppSidebar } from '@/components/app/sidebar';
 import { AppHeader } from '@/components/app/header';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { AIAssistant } from '@/components/app/ai-assistant';
+import dynamic from 'next/dynamic';
+
+const AIAssistant = dynamic(
+  () => import('@/components/app/ai-assistant').then(mod => mod.AIAssistant),
+  { ssr: false }
+);
+
 
 export default function AuthenticatedLayout({
   children,
