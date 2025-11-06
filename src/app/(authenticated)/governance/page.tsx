@@ -14,47 +14,12 @@ import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { ArrowRight, CheckCircle, Clock, Scale, Sigma, XCircle } from 'lucide-react';
 import Link from 'next/link';
-
-// Mock data, to be replaced with real data from useGovernance
-const mockProposals = [
-  {
-    id: 42,
-    title: 'Upgrade Sequencer to v2.1',
-    category: 'Upgrade',
-    deadline: 'in 3 days',
-    forVotes: 750000,
-    againstVotes: 120000,
-    yourVote: null,
-  },
-  {
-    id: 41,
-    title: 'Adjust Staking Rewards for Medium Pool',
-    category: 'Parameter',
-    deadline: 'in 5 days',
-    forVotes: 450000,
-    againstVotes: 200000,
-    yourVote: 'For',
-  },
-  {
-    id: 40,
-    title: 'Fund Community Marketing Initiative',
-    category: 'Treasury',
-    deadline: 'in 10 days',
-    forVotes: 980000,
-    againstVotes: 50000,
-    yourVote: null,
-  },
-];
-
-const mockStats = [
-    { name: 'Total Proposals', value: 42, icon: Sigma },
-    { name: 'Active Proposals', value: 3, icon: Clock },
-    { name: 'Your Votes Cast', value: 12, icon: CheckCircle },
-    { name: 'Voting Power Used', value: '75%', icon: Scale },
-]
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { formatAmount } from 'packages/blockchain/utils';
+import { Proposal } from 'packages/blockchain/types';
 
 export default function GovernancePage() {
-  const { votingPower } = useGovernance();
+  const { proposals, votingPower, isLoading } = useGovernance();
 
   return (
     <div className="container mx-auto py-8 px-4 space-y-8">
@@ -72,11 +37,19 @@ export default function GovernancePage() {
           <CardDescription>The total weight of your vote in proposals.</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-5xl font-bold tracking-tight">{votingPower.isLoading ? '...' : '1,500'} ANDE</p>
-          <div className="mt-4 flex justify-center gap-6 text-muted-foreground">
-            <span>Delegated: 0</span>
-            <span>Available: 1,500</span>
-          </div>
+          {isLoading || votingPower.isLoading ? (
+            <LoadingSpinner className="mx-auto h-12 w-12" />
+          ) : (
+            <>
+              <p className="text-5xl font-bold tracking-tight">
+                {votingPower.data ? formatAmount(BigInt(votingPower.data), 18, 2) : '0'} ANDE
+              </p>
+              <div className="mt-4 flex justify-center gap-6 text-muted-foreground">
+                <span>Delegated: 0</span>
+                <span>Available: {votingPower.data ? formatAmount(BigInt(votingPower.data), 18, 2) : '0'}</span>
+              </div>
+            </>
+          )}
         </CardContent>
         <CardFooter className="justify-center">
           <Button asChild>
@@ -94,64 +67,52 @@ export default function GovernancePage() {
             </Button>
         </div>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {mockProposals.map(proposal => {
-            const totalVotes = proposal.forVotes + proposal.againstVotes;
-            const forPercentage = (proposal.forVotes / totalVotes) * 100;
-            return (
-              <Card key={proposal.id} className="flex flex-col">
-                <CardHeader>
-                  <CardDescription>Proposal #{proposal.id} &bull; {proposal.category}</CardDescription>
-                  <CardTitle>{proposal.title}</CardTitle>
-                </CardHeader>
-                <CardContent className="flex-grow space-y-4">
-                  <Progress value={forPercentage} />
-                  <div className="flex justify-between text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <CheckCircle className="h-4 w-4 text-green-500" />
-                      <span>For: {(proposal.forVotes / 1_000_000).toFixed(2)}M</span>
+          {isLoading ? (
+            Array.from({ length: 3 }).map((_, i) => (
+                <Card key={i}><CardHeader><CardTitle>Loading...</CardTitle></CardHeader><CardContent><LoadingSpinner /></CardContent></Card>
+            ))
+          ) : proposals.data && proposals.data.length > 0 ? (
+            proposals.data.map((proposal: Proposal) => {
+              const totalVotes = proposal.forVotes + proposal.againstVotes;
+              const forPercentage = totalVotes > 0 ? Number((proposal.forVotes * 100n) / totalVotes) : 0;
+              return (
+                <Card key={String(proposal.id)} className="flex flex-col">
+                  <CardHeader>
+                    <CardDescription>Proposal #{String(proposal.id)}</CardDescription>
+                    <CardTitle>{proposal.description}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex-grow space-y-4">
+                    <Progress value={forPercentage} />
+                    <div className="flex justify-between text-sm text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <CheckCircle className="h-4 w-4 text-green-500" />
+                        <span>For: {formatAmount(proposal.forVotes, 18, 2)}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <XCircle className="h-4 w-4 text-red-500" />
+                        <span>Against: {formatAmount(proposal.againstVotes, 18, 2)}</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <XCircle className="h-4 w-4 text-red-500" />
-                      <span>Against: {(proposal.againstVotes / 1_000_000).toFixed(2)}M</span>
+                    <Separator />
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-muted-foreground">Voting ends: ...</span>
                     </div>
-                  </div>
-                  <Separator />
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-muted-foreground">Voting ends: {proposal.deadline}</span>
-                    {proposal.yourVote && <span className="font-bold">You voted: {proposal.yourVote}</span>}
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <Button className="w-full" asChild>
-                    <Link href={`/governance/vote/${proposal.id}`}>
-                      {proposal.yourVote ? 'Change Vote' : 'Vote Now'}
-                    </Link>
-                  </Button>
-                </CardFooter>
-              </Card>
-            )
-          })}
-        </div>
-      </div>
-      
-      {/* Stats Grid */}
-      <div>
-        <h2 className="text-2xl font-semibold mb-4">Network Stats</h2>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {mockStats.map(stat => (
-                <Card key={stat.name}>
-                    <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-sm font-medium">{stat.name}</CardTitle>
-                        <stat.icon className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-2xl font-bold">{stat.value}</p>
-                    </CardContent>
+                  </CardContent>
+                  <CardFooter>
+                    <Button className="w-full" asChild>
+                      <Link href={`/governance/vote/${proposal.id}`}>
+                        Vote Now
+                      </Link>
+                    </Button>
+                  </CardFooter>
                 </Card>
-            ))}
+              )
+            })
+          ) : (
+            <p>No active proposals.</p>
+          )}
         </div>
       </div>
-
     </div>
   );
 }
