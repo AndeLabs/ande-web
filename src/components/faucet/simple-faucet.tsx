@@ -10,16 +10,7 @@ import { Loader2, Droplets, Send, CheckCircle, AlertCircle, ExternalLink } from 
 import { useAccount, useSwitchChain, useConnect } from 'wagmi'
 import { parseEther, formatEther } from 'viem'
 
-// Configuración del faucet ANDE
-const FAUCET_CONFIG = {
-  address: '0x57349E2a5625B4563e323C82ac924749Be1d89c',
-  claimAmount: parseEther('100'), // 100 ANDE
-  cooldownMs: 24 * 60 * 60 * 1000, // 24 horas
-  maxClaimsPerDay: 3,
-  rpcUrl: 'https://rpc.ande.network',
-  explorerUrl: 'https://explorer.ande.network',
-  chainId: 6174,
-}
+
 
 interface FaucetResponse {
   success: boolean
