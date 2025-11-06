@@ -1,12 +1,14 @@
+'use client';
+
 import { Logo } from '@/components/logo';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu } from 'lucide-react';
 import Link from 'next/link';
-import { ConnectButton } from '@/components/connect-button';
+import { usePathname } from 'next/navigation';
 import { DarkModeToggle } from './dark-mode-toggle';
 
-const navLinks = [
+const mainNavLinks = [
   { href: '/about', label: 'About' },
   { href: '/technology', label: 'Technology' },
   { href: '/tokenomics', label: 'Tokenomics' },
@@ -16,7 +18,25 @@ const navLinks = [
   { href: '/blog', label: 'Blog' },
 ];
 
+const appNavLinks = [
+    { href: "/dashboard", label: "Dashboard"},
+    { href: "/explorer", label: "Explorer"},
+    { href: "/faucet", label: "Faucet"},
+    { href: "/stats", label: "Stats"},
+]
+
 export function Header() {
+  const pathname = usePathname();
+  const isApp = pathname.startsWith('/dashboard') || pathname.startsWith('/portfolio') || pathname.startsWith('/staking') || pathname.startsWith('/governance') || pathname.startsWith('/defi') || pathname.startsWith('/transactions') || pathname.startsWith('/profile');
+
+  // This is a temporary solution to distinguish between the two apps.
+  // In a real monorepo, these would be separate applications.
+  if (isApp) {
+    return null; // The authenticated layout will have its own header
+  }
+
+  const navLinks = isApp ? appNavLinks : mainNavLinks;
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-14 items-center">
@@ -68,7 +88,7 @@ export function Header() {
         <div className="flex flex-1 items-center justify-end space-x-2">
           <DarkModeToggle />
           <Button asChild>
-            <a href="https://app.ande.network" target="_blank" rel="noopener noreferrer">Launch App</a>
+            <Link href="/dashboard">Launch App</Link>
           </Button>
         </div>
       </div>

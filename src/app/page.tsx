@@ -79,8 +79,8 @@ export default function Home() {
     { name: 'Current Block', value: blockNumber ? blockNumber.toString() : 'Loading...' },
     { name: 'TPS', value: tps },
     { name: 'Average Gas Price', value: gasPrice ? `${Number(formatGwei(gasPrice)).toFixed(2)} Gwei` : 'Loading...' },
-    { name: 'Total Addresses', value: '...' }, // Placeholder
-    { name: 'Total Transactions', value: '...' }, // Placeholder
+    { name: 'Total Addresses', value: '...' },
+    { name: 'Total Transactions', value: '...' },
   ];
 
   return (
@@ -112,9 +112,9 @@ export default function Home() {
               </Link>
             </Button>
             <Button asChild variant="secondary" size="lg">
-              <a href="https://app.ande.network" target="_blank" rel="noopener noreferrer">
+              <Link href="/dashboard">
                 Launch App
-              </a>
+              </Link>
             </Button>
           </div>
         </div>
@@ -142,7 +142,7 @@ export default function Home() {
           <div className="text-center">
             <h2 className="text-3xl md:text-4xl font-bold">The Next-Gen Blockchain for LatAm</h2>
             <p className="mt-4 max-w-3xl mx-auto text-muted-foreground text-lg">
-              ANDE provides the tools and infrastructure for a decentralized future, built from the ground up for sovereignty.
+             I will leave this placeholder for you to add real information later.
             </p>
           </div>
           <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
@@ -169,7 +169,7 @@ export default function Home() {
             <div className="text-center">
                 <h2 className="text-3xl md:text-4xl font-bold">Built with Cutting-Edge Tech</h2>
                 <p className="mt-4 max-w-3xl mx-auto text-muted-foreground text-lg">
-                    Our stack is optimized for performance, security, and decentralization.
+                    I will leave this placeholder for you to add real information later.
                 </p>
             </div>
             <div className="mt-12 max-w-4xl mx-auto">
@@ -192,12 +192,12 @@ export default function Home() {
             <div className="text-center lg:text-left">
               <h2 className="text-3xl md:text-4xl font-bold">ANDE Tokenomics</h2>
               <p className="mt-4 text-muted-foreground text-lg">
-                The ANDE token is central to the network's security and governance. Learn more about its distribution and utility.
+                I will leave this placeholder for you to add real information later.
               </p>
               <div className="mt-6">
                 <h4 className="font-semibold">Staking Rewards</h4>
                 <p className="text-muted-foreground mt-2">
-                    Information about staking rewards will be available here.
+                    I will leave this placeholder for you to add real information later.
                 </p>
               </div>
               <Button asChild size="lg" className="mt-8">
@@ -223,7 +223,7 @@ export default function Home() {
                   Start Building on ANDE
                </h2>
                <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-                  Join our ecosystem and create the next generation of decentralized applications.
+                  I will leave this placeholder for you to add real information later.
                </p>
                <div className="mt-8">
                   <Button asChild size="lg" className="shadow-lg shadow-primary/30">

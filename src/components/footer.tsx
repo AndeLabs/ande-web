@@ -1,5 +1,8 @@
+'use client';
+
 import { Logo } from '@/components/logo';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Github, Twitter, MessageSquare } from 'lucide-react';
 
 const socialLinks = [
@@ -9,6 +12,13 @@ const socialLinks = [
 ];
 
 export function Footer() {
+  const pathname = usePathname();
+  const isApp = pathname.startsWith('/dashboard') || pathname.startsWith('/portfolio') || pathname.startsWith('/staking') || pathname.startsWith('/governance') || pathname.startsWith('/defi') || pathname.startsWith('/transactions') || pathname.startsWith('/profile');
+
+  if (isApp) {
+    return null;
+  }
+
   return (
     <footer className="border-t">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 py-12">
