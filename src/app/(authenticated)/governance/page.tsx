@@ -17,62 +17,100 @@ import Link from 'next/link';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { formatAmount } from 'packages/blockchain/utils';
 import { Proposal } from 'packages/blockchain/types';
+import { Suspense } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 
-export default function GovernancePage() {
-  const { proposals, votingPower, isLoading } = useGovernance();
 
-  return (
-    <div className="container mx-auto py-8 px-4 space-y-8">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold tracking-tight">Governance Hub</h1>
-        <p className="mt-2 text-lg text-muted-foreground">
-          Participate in the future of the ANDE Network.
-        </p>
-      </div>
+function VotingPowerCard() {
+    const { votingPower, isLoading } = useGovernance();
 
-      {/* Voting Power Section */}
-      <Card className="text-center">
-        <CardHeader>
-          <CardTitle>Your Voting Power</CardTitle>
-          <CardDescription>The total weight of your vote in proposals.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {isLoading || votingPower.isLoading ? (
-            <LoadingSpinner className="mx-auto h-12 w-12" />
-          ) : (
-            <>
-              <p className="text-5xl font-bold tracking-tight">
-                {votingPower.data ? formatAmount(BigInt(votingPower.data), 18, 2) : '0'} ANDE
-              </p>
-              <div className="mt-4 flex justify-center gap-6 text-muted-foreground">
-                <span>Delegated: 0</span>
-                <span>Available: {votingPower.data ? formatAmount(BigInt(votingPower.data), 18, 2) : '0'}</span>
-              </div>
-            </>
-          )}
-        </CardContent>
-        <CardFooter className="justify-center">
-          <Button asChild>
-            <Link href="/governance/delegation">Delegate Votes</Link>
-          </Button>
-        </CardFooter>
-      </Card>
-
-      {/* Active Proposals Section */}
-      <div>
-        <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-semibold">Active Proposals</h2>
-            <Button variant="link" asChild>
-                <Link href="/governance/proposals">View All <ArrowRight className="ml-2 h-4 w-4" /></Link>
+    if(isLoading || votingPower.isLoading) {
+        return (
+            <Card className="text-center">
+                <CardHeader>
+                <CardTitle>Your Voting Power</CardTitle>
+                <CardDescription>The total weight of your vote in proposals.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Skeleton className="h-12 w-1/2 mx-auto mb-4" />
+                    <Skeleton className="h-4 w-1/3 mx-auto" />
+                </CardContent>
+                <CardFooter className="justify-center">
+                    <Button disabled>Delegate Votes</Button>
+                </CardFooter>
+            </Card>
+        )
+    }
+    
+    return (
+        <Card className="text-center">
+            <CardHeader>
+            <CardTitle>Your Voting Power</CardTitle>
+            <CardDescription>The total weight of your vote in proposals.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <>
+                <p className="text-5xl font-bold tracking-tight">
+                    {votingPower.data ? formatAmount(BigInt(votingPower.data), 18, 2) : '0'} ANDE
+                </p>
+                <div className="mt-4 flex justify-center gap-6 text-muted-foreground">
+                    <span>Delegated: 0</span>
+                    <span>Available: {votingPower.data ? formatAmount(BigInt(votingPower.data), 18, 2) : '0'}</span>
+                </div>
+                </>
+            </CardContent>
+            <CardFooter className="justify-center">
+            <Button asChild>
+                <Link href="/governance/delegation">Delegate Votes</Link>
             </Button>
-        </div>
+            </CardFooter>
+      </Card>
+    )
+}
+
+function ProposalCardSkeleton() {
+    return (
+        <Card>
+            <CardHeader>
+                <Skeleton className="h-4 w-1/4" />
+                <Skeleton className="h-6 w-3/4" />
+            </CardHeader>
+            <CardContent className="space-y-4">
+                <Skeleton className="h-4 w-full" />
+                <div className="flex justify-between">
+                    <Skeleton className="h-4 w-1/3" />
+                    <Skeleton className="h-4 w-1/3" />
+                </div>
+                <Separator />
+                 <Skeleton className="h-4 w-1/2" />
+            </CardContent>
+            <CardFooter>
+                <Skeleton className="h-10 w-full" />
+            </CardFooter>
+        </Card>
+    )
+}
+
+function ActiveProposals() {
+    const { proposals, isLoading } = useGovernance();
+
+    if(isLoading) {
+        return (
+             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <ProposalCardSkeleton />
+                <ProposalCardSkeleton />
+                <ProposalCardSkeleton />
+            </div>
+        )
+    }
+
+    if (!proposals.data || proposals.data.length === 0) {
+        return <p>No active proposals.</p>
+    }
+
+    return (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {isLoading ? (
-            Array.from({ length: 3 }).map((_, i) => (
-                <Card key={i}><CardHeader><CardTitle>Loading...</CardTitle></CardHeader><CardContent><LoadingSpinner /></CardContent></Card>
-            ))
-          ) : proposals.data && proposals.data.length > 0 ? (
-            proposals.data.map((proposal: Proposal) => {
+            {proposals.data.map((proposal: Proposal) => {
               const totalVotes = proposal.forVotes + proposal.againstVotes;
               const forPercentage = totalVotes > 0 ? Number((proposal.forVotes * 100n) / totalVotes) : 0;
               return (
@@ -107,11 +145,38 @@ export default function GovernancePage() {
                   </CardFooter>
                 </Card>
               )
-            })
-          ) : (
-            <p>No active proposals.</p>
-          )}
+            })}
         </div>
+    )
+}
+
+
+export default function GovernancePage() {
+  return (
+    <div className="container mx-auto py-8 px-4 space-y-8">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold tracking-tight">Governance Hub</h1>
+        <p className="mt-2 text-lg text-muted-foreground">
+          Participate in the future of the ANDE Network.
+        </p>
+      </div>
+
+      <Suspense fallback={<Card className="text-center"><CardHeader><Skeleton className="h-6 w-1/3 mx-auto" /></CardHeader><CardContent><Skeleton className="h-12 w-1/2 mx-auto" /></CardContent></Card>}>
+        <VotingPowerCard />
+      </Suspense>
+
+
+      {/* Active Proposals Section */}
+      <div>
+        <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-semibold">Active Proposals</h2>
+            <Button variant="link" asChild>
+                <Link href="/governance/proposals">View All <ArrowRight className="ml-2 h-4 w-4" /></Link>
+            </Button>
+        </div>
+        <Suspense fallback={<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"><ProposalCardSkeleton /><ProposalCardSkeleton /><ProposalCardSkeleton /></div>}>
+            <ActiveProposals />
+        </Suspense>
       </div>
     </div>
   );
