@@ -1,4 +1,4 @@
-import { FaucetCard } from '@/components/faucet-card';
+import { SimpleFaucet } from '@/components/faucet/simple-faucet';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -16,7 +16,7 @@ export default function FaucetPage() {
         </p>
       </div>
 
-      <FaucetCard />
+      <SimpleFaucet />
 
       {/* Additional Information */}
       <div className="mt-12 max-w-2xl mx-auto space-y-6">

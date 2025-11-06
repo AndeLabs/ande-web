@@ -73,17 +73,54 @@ export function FaucetCard() {
 
     setLoading(true);
     try {
-      const response = await fetch(`${FAUCET_API_URL}/api/claim`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          address: targetAddress,
-        }),
-      });
+      // Try multiple endpoints for compatibility
+      const endpoints = [
+        `${FAUCET_API_URL}/api/claim`,        // eth-faucet v2
+        `${FAUCET_API_URL}/claim`,            // eth-faucet v1
+        `${FAUCET_API_URL}/api/faucet/claim`, // alternative
+      ];
 
-      const data: FaucetResponse = await response.json();
+      let response: Response | null = null;
+      let lastError: Error | null = null;
+
+      for (const endpoint of endpoints) {
+        try {
+          response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              address: targetAddress,
+            }),
+          });
+
+          // If we get a response (even 405), stop trying other endpoints
+          if (response) break;
+        } catch (e) {
+          lastError = e instanceof Error ? e : new Error('Network error');
+          continue;
+        }
+      }
+
+      if (!response) {
+        throw lastError || new Error('Could not connect to faucet service');
+      }
+
+      // Handle different response formats
+      let data: FaucetResponse;
+      const contentType = response.headers.get('content-type');
+      
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        // If not JSON, assume success for 2xx responses
+        if (response.ok) {
+          data = { success: true };
+        } else {
+          throw new Error(`Faucet responded with status ${response.status}`);
+        }
+      }
 
       if (response.ok && data.success) {
         setLastRequestTime(Date.now());
@@ -107,7 +144,8 @@ export function FaucetCard() {
         });
         setCustomAddress('');
       } else {
-        throw new Error(data.error || data.message || 'Failed to request tokens');
+        const errorMsg = data.error || data.message || `Request failed with status ${response.status}`;
+        throw new Error(errorMsg);
       }
     } catch (error) {
       console.error('Faucet error:', error);
