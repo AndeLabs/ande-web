@@ -1,4 +1,4 @@
-import type {Config} from 'tailwindcss';
+import type { Config } from 'tailwindcss';
 
 export default {
   darkMode: ['class'],
@@ -65,6 +65,22 @@ export default {
           border: 'hsl(var(--sidebar-border))',
           ring: 'hsl(var(--sidebar-ring))',
         },
+        brand: {
+          orange: '#FF9F1C',
+          blue: '#2455B8',
+          lavender: '#BFA4FF',
+          peach: '#FFC77D',
+        },
+        'brand-blue': 'hsl(var(--ring))',
+      },
+      backgroundImage: {
+        'hero-gradient': 'linear-gradient(135deg, #FF9F1C 0%, #2455B8 100%)',
+        'card-gradient': 'linear-gradient(135deg, #BFA4FF 0%, #FFC77D 100%)',
+        'button-gradient': 'linear-gradient(90deg, #FF9F1C 0%, #FFC77D 100%)',
+      },
+      boxShadow: {
+        'glow-orange': '0 0 20px 0px rgba(255, 159, 28, 0.5)',
+        'glow-blue': '0 0 20px 0px rgba(36, 85, 184, 0.5)',
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -88,10 +104,20 @@ export default {
             height: '0',
           },
         },
+        gradient: {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        gradient: 'gradient 15s ease infinite',
+        float: 'float 6s ease-in-out infinite',
       },
     },
   },
