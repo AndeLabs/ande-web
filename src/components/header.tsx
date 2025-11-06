@@ -1,14 +1,15 @@
 import { Logo } from '@/components/logo';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Mountain } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import Link from 'next/link';
+import { ConnectButton } from '@/components/connect-button';
 
 const navLinks = [
-  { href: '#', label: 'Dashboard' },
-  { href: '#', label: 'Explorer' },
-  { href: '#', label: 'Faucet' },
-  { href: '#', label: 'Stats' },
+  { href: '/dashboard', label: 'Dashboard' },
+  { href: '/explorer', label: 'Explorer' },
+  { href: '/faucet', label: 'Faucet' },
+  { href: '/stats', label: 'Stats' },
 ];
 
 export function Header() {
@@ -61,7 +62,7 @@ export function Header() {
         </Sheet>
 
         <div className="flex flex-1 items-center justify-end space-x-2">
-          <Button>Connect Wallet</Button>
+          <ConnectButton />
         </div>
       </div>
     </header>

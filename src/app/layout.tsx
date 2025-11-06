@@ -4,6 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
+import { Providers } from './providers';
 
 export const metadata: Metadata = {
   title: 'ANDE Network Platform',
@@ -34,12 +35,14 @@ export default function RootLayout({
           'font-body antialiased min-h-screen bg-background text-foreground'
         )}
       >
-        <div className="relative flex min-h-dvh flex-col">
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </div>
-        <Toaster />
+        <Providers>
+          <div className="relative flex min-h-dvh flex-col">
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </div>
+          <Toaster />
+        </Providers>
       </body>
     </html>
   );
