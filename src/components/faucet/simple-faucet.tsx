@@ -12,7 +12,7 @@ import { parseEther, formatEther } from 'viem'
 
 // Configuración del faucet ANDE
 const FAUCET_CONFIG = {
-  address: '0xAb62b7A7D059d6D90b8021aAbdb8123E089F4E0f',
+  address: '0x57349E2a5625B4563e323C82ac924749Be1d89c',
   claimAmount: parseEther('100'), // 100 ANDE
   cooldownMs: 24 * 60 * 60 * 1000, // 24 horas
   maxClaimsPerDay: 3,

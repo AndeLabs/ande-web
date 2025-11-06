@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { ethers } from 'ethers'
 
 // Configuración del faucet
 const FAUCET_CONFIG = {
-  address: '0xAb62b7A7D059d6D90b8021aAbdb8123E089F4E0f',
-  privateKey: process.env.FAUCET_PRIVATE_KEY || '0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a',
-  claimAmount: '100000000000000000000', // 100 ANDE en wei
+  address: '0x57349E2a5625B4563e323C82ac924749Be1d89c',
+  privateKey: process.env.FAUCET_PRIVATE_KEY || '',
   rpcUrl: 'https://rpc.ande.network',
   chainId: 6174,
+  claimAmount: ethers.utils.parseEther('100'), // 100 ANDE
   gasLimit: 21000,
-  gasPrice: '20000000000', // 20 gwei
+  gasPrice: ethers.utils.parseUnits('20', 'gwei'),
   cooldownMs: 24 * 60 * 60 * 1000, // 24 horas
   maxClaimsPerDay: 3,
 }
@@ -27,7 +28,7 @@ const ipRateLimit = new Map<string, {
 
 // Validar dirección Ethereum
 function isValidEthereumAddress(address: string): boolean {
-  return /^0x[a-fA-F0-9]{40}$/.test(address)
+  return ethers.utils.isAddress(address)
 }
 
 // Obtener IP del cliente
@@ -67,7 +68,6 @@ function checkDailyLimit(address: string): { canClaim: boolean; claimCount: numb
   
   const now = Date.now()
   const startOfDay = Math.floor(now / (24 * 60 * 60 * 1000)) * (24 * 60 * 60 * 1000)
-  
   const todayClaims = history.dailyClaims.filter(claimTime => claimTime >= startOfDay).length
   
   return {
@@ -133,72 +133,75 @@ function updateClaimHistory(address: string): void {
   claimHistory.set(address, history)
 }
 
-// Obtener nonce
-async function getNonce(address: string): Promise<number> {
-  try {
-    const response = await fetch(FAUCET_CONFIG.rpcUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        jsonrpc: '2.0',
-        method: 'eth_getTransactionCount',
-        params: [address, 'latest'],
-        id: 1,
-      }),
-    })
-    
-    const data = await response.json()
-    return parseInt(data.result, 16)
-  } catch (error) {
-    console.error('Error getting nonce:', error)
-    return 0
-  }
-}
-
-// Enviar transacción raw
-async function sendRawTransaction(signedTx: string): Promise<string> {
-  try {
-    const response = await fetch(FAUCET_CONFIG.rpcUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        jsonrpc: '2.0',
-        method: 'eth_sendRawTransaction',
-        params: [signedTx],
-        id: 1,
-      }),
-    })
-    
-    const data = await response.json()
-    return data.result
-  } catch (error) {
-    console.error('Error sending transaction:', error)
-    throw error
-  }
-}
-
-// Enviar tokens (implementación simple)
+// Enviar tokens reales con ethers.js
 async function sendTokens(toAddress: string): Promise<{ success: boolean; txHash?: string; error?: string }> {
   try {
-    // En un entorno real, aquí firmarías la transacción con ethers.js
-    // Por ahora, simulamos una transacción exitosa para testnet
-    
-    const nonce = await getNonce(FAUCET_CONFIG.address)
-    const mockTxHash = '0x' + Array(64).fill(0).map(() => Math.floor(Math.random() * 16).toString(16)).join('')
-    
-    console.log(`Simulating transaction: ${FAUCET_CONFIG.address} -> ${toAddress}, amount: ${FAUCET_CONFIG.claimAmount}, nonce: ${nonce}`)
-    
-    // Simulación de éxito
-    return { 
-      success: true, 
-      txHash: mockTxHash
+    if (!FAUCET_CONFIG.privateKey) {
+      throw new Error('Private key not configured')
     }
     
-  } catch (error) {
+    // Crear provider y wallet
+    const provider = new ethers.providers.JsonRpcProvider(FAUCET_CONFIG.rpcUrl)
+    const wallet = new ethers.Wallet(FAUCET_CONFIG.privateKey, provider)
+    
+    // Verificar balance del faucet
+    const balance = await wallet.getBalance()
+    if (balance.lt(FAUCET_CONFIG.claimAmount)) {
+      return { 
+        success: false, 
+        error: `Faucet balance insufficient. Current: ${ethers.utils.formatEther(balance)} ANDE` 
+      }
+    }
+    
+    // Obtener nonce
+    const nonce = await wallet.getTransactionCount()
+    
+    // Enviar transacción
+    console.log(`Sending ${ethers.utils.formatEther(FAUCET_CONFIG.claimAmount)} ANDE to ${toAddress}`)
+    
+    const tx = await wallet.sendTransaction({
+      to: toAddress,
+      value: FAUCET_CONFIG.claimAmount,
+      gasLimit: FAUCET_CONFIG.gasLimit,
+      gasPrice: FAUCET_CONFIG.gasPrice,
+      nonce: nonce,
+    })
+    
+    console.log(`Transaction sent: ${tx.hash}`)
+    
+    // Esperar confirmación
+    const receipt = await tx.wait()
+    console.log(`Transaction confirmed in block ${receipt.blockNumber}`)
+    
+    if (receipt.status === 1) {
+      return { 
+        success: true, 
+        txHash: tx.hash
+      }
+    } else {
+      return { 
+        success: false, 
+        error: 'Transaction failed on network' 
+      }
+    }
+    
+  } catch (error: any) {
     console.error('Error sending tokens:', error)
-    return { 
-      success: false, 
-      error: 'Error al procesar la transacción'
+    
+    // Manejar errores específicos de ethers
+    if (error.code === 'INSUFFICIENT_FUNDS') {
+      return { success: false, error: 'Insufficient funds in faucet wallet' }
+    } else if (error.code === 'NETWORK_ERROR') {
+      return { success: false, error: 'Network connection error' }
+    } else if (error.code === 'REPLACEMENT_UNDERPRICED') {
+      return { success: false, error: 'Gas price too low' }
+    } else if (error.code === 'NONCE_EXPIRED') {
+      return { success: false, error: 'Nonce expired, please try again' }
+    } else {
+      return { 
+        success: false, 
+        error: error.message || 'Transaction failed' 
+      }
     }
   }
 }
@@ -247,7 +250,7 @@ export async function POST(request: NextRequest) {
       }, { status: 429 })
     }
     
-    // Enviar tokens
+    // Enviar tokens reales
     const sendResult = await sendTokens(address)
     
     if (!sendResult.success) {
@@ -264,7 +267,7 @@ export async function POST(request: NextRequest) {
       success: true,
       message: 'Tokens enviados correctamente',
       txHash: sendResult.txHash,
-      amount: FAUCET_CONFIG.claimAmount
+      amount: FAUCET_CONFIG.claimAmount.toString()
     })
     
   } catch (error) {
@@ -279,31 +282,15 @@ export async function POST(request: NextRequest) {
 // GET endpoint para información del faucet
 export async function GET() {
   try {
-    // Obtener balance actual
-    const response = await fetch(FAUCET_CONFIG.rpcUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        jsonrpc: '2.0',
-        method: 'eth_getBalance',
-        params: [FAUCET_CONFIG.address, 'latest'],
-        id: 1,
-      }),
-    })
-    
-    const data = await response.json()
-    let balance = '0'
-    
-    if (data.result) {
-      const balanceWei = BigInt(data.result)
-      balance = (balanceWei / BigInt(10**18)).toString()
-    }
+    // Obtener balance actual del faucet
+    const provider = new ethers.providers.JsonRpcProvider(FAUCET_CONFIG.rpcUrl)
+    const balance = await provider.getBalance(FAUCET_CONFIG.address)
     
     return NextResponse.json({
       success: true,
       faucetAddress: FAUCET_CONFIG.address,
-      claimAmount: (parseInt(FAUCET_CONFIG.claimAmount) / 10**18).toString(),
-      currentBalance: balance,
+      claimAmount: ethers.utils.formatEther(FAUCET_CONFIG.claimAmount),
+      currentBalance: ethers.utils.formatEther(balance),
       cooldownHours: 24,
       maxClaimsPerDay: FAUCET_CONFIG.maxClaimsPerDay,
       network: 'ANDE Testnet',
