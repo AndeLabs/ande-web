@@ -13,6 +13,9 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 export const metadata: Metadata = {
   title: 'ANDE Network - The Sovereign Rollup for Latin America',
   description: 'ANDE Network is a fast, cheap, and truly sovereign EVM rollup built for Latin America, using Celestia for Data Availability.',
+  icons: {
+    icon: '/ande.ico',
+  },
   openGraph: {
     title: 'ANDE Network - The Sovereign Rollup for Latin America',
     description: 'A high-performance blockchain for the next generation of decentralized applications.',
