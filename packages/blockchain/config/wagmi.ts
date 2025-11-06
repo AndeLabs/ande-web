@@ -1,14 +1,13 @@
 
 import { createConfig, http } from 'wagmi';
 import { andeNetwork } from './chains';
-import { metaMask, walletConnect, coinbaseWallet } from 'wagmi/connectors';
+import { metaMask, walletConnect } from 'wagmi/connectors';
 import type {Connector} from 'wagmi';
 
 const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
 
 const connectors: Connector[] = [
   metaMask(),
-  coinbaseWallet({ appName: 'ANDE Network Platform' }),
 ];
 
 if (projectId) {
