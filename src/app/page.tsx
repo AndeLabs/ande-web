@@ -19,6 +19,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { ServicesSection } from '@/components/services-section';
 import placeholderImages from '@/lib/placeholder-images.json';
 
 const featureCards = [
@@ -138,6 +139,9 @@ export default function Home() {
           <NetworkStats />
         </div>
       </section>
+
+      {/* Services Section */}
+      <ServicesSection />
 
       {/* Key Features Section */}
       <section id="features" className="py-16 md:py-24">

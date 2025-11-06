@@ -7,6 +7,7 @@ import { Menu } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { DarkModeToggle } from './dark-mode-toggle';
+import { QuickAccessServices } from './quick-access-services';
 
 const mainNavLinks = [
   { href: '/about', label: 'About' },
@@ -86,6 +87,7 @@ export function Header() {
         </Sheet>
 
         <div className="flex flex-1 items-center justify-end space-x-2">
+          <QuickAccessServices />
           <DarkModeToggle />
           <Button asChild>
             <Link href="/dashboard">Launch App</Link>
