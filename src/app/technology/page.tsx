@@ -13,7 +13,7 @@ import {
       items: [
         { name: 'Next.js 15.3+', reason: 'React Server Components reduce JS bundles by 30-50%.' },
         { name: 'React 18.3+', reason: 'Streaming SSR improves Time to First Byte (TTFB) by up to 60%.' },
-        { name: 'TypeScript 5.9+', reason: 'Ensures type safety and better developer experience.' },
+        { name: 'TypeScript 5', reason: 'Ensures type safety and better developer experience.' },
         { name: 'Turbopack (Dev)', reason: 'Faster development server and builds.' },
       ],
     },
@@ -23,6 +23,7 @@ import {
           { name: 'Wagmi', reason: 'Provides React hooks for Ethereum, simplifying wallet and contract interaction.' },
           { name: 'Viem', reason: 'A lightweight and efficient TypeScript interface for Ethereum.' },
           { name: 'TanStack Query', reason: 'Manages server state, caching, and real-time data fetching.' },
+          { name: 'RainbowKit', reason: 'Provides a polished and customizable wallet connection experience.' },
         ],
     },
     {
