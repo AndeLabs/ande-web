@@ -226,7 +226,7 @@ export function FaucetCard() {
         {/* Request Button */}
         <Button
           onClick={requestTokens}
-          disabled={loading || !isValidAddress || isInCooldown}
+          disabled={loading || !isValidAddress || !!isInCooldown}
           className="w-full"
           size="lg"
         >

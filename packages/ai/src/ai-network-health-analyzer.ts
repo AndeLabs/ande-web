@@ -8,8 +8,15 @@
  * - NetworkHealthOutput - The return type for the analyzeNetworkHealth function.
  */
 
-import {ai} from '.';
-import {z} from 'genkit';
+import { genkit } from 'genkit';
+import { googleAI } from '@genkit-ai/google-genai';
+import { z } from 'zod';
+
+const ai = genkit({
+  plugins: [googleAI()],
+  model: 'gemini-1.5-flash',
+});
+
 
 const NetworkHealthInputSchema = z.object({
   networkMetrics: z
@@ -66,7 +73,7 @@ const analyzeNetworkHealthFlow = ai.defineFlow(
     inputSchema: NetworkHealthInputSchema,
     outputSchema: NetworkHealthOutputSchema,
   },
-  async input => {
+  async (input: any) => {
     try {
       const {output} = await prompt(input);
       return output!;
@@ -78,4 +85,3 @@ const analyzeNetworkHealthFlow = ai.defineFlow(
     }
   }
 );
-

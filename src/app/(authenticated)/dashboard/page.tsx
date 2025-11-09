@@ -49,7 +49,7 @@ function PortfolioOverview() {
       </CardHeader>
       <CardContent>
         <div>
-          <p className="text-3xl font-bold">{formatAmount(BigInt(formattedBalance || 0), 18, 4)} ANDE</p>
+          <p className="text-3xl font-bold">{formattedBalance ? formatAmount(BigInt(formattedBalance), 18, 4) : '0.0000'} ANDE</p>
           <p className="text-sm text-muted-foreground">~ $0.00 USD</p>
         </div>
       </CardContent>
@@ -59,7 +59,7 @@ function PortfolioOverview() {
 
 function StakingSummary() {
     const { stakingData, isLoading } = useStaking();
-    const totalStaked = Object.values(stakingData).reduce((acc, val) => acc + (val || BigInt(0)), BigInt(0));
+    const totalStaked = Object.values(stakingData || {}).reduce((acc, val) => (acc || BigInt(0)) + (val || BigInt(0)), BigInt(0));
 
     if (isLoading) {
       return (
@@ -84,7 +84,7 @@ function StakingSummary() {
             </CardHeader>
             <CardContent>
                 <div>
-                    <p className="text-3xl font-bold">{formatAmount(totalStaked, 18, 4)} ANDE</p>
+                    <p className="text-3xl font-bold">{formatAmount(totalStaked || BigInt(0), 18, 4)} ANDE</p>
                     <p className="text-sm text-muted-foreground">Across all pools</p>
                 </div>
             </CardContent>
@@ -93,7 +93,8 @@ function StakingSummary() {
 }
 
 function GovernanceSummary() {
-    const { proposals, votingPower, isLoading } = useGovernance();
+    const { proposals, votingPower } = useGovernance();
+    const isLoading = proposals.isLoading || votingPower.isLoading;
 
     if (isLoading) {
         return (

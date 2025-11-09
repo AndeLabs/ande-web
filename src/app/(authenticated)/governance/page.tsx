@@ -22,9 +22,9 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 
 function VotingPowerCard() {
-    const { votingPower, isLoading } = useGovernance();
+    const { votingPower } = useGovernance();
 
-    if(isLoading || votingPower.isLoading) {
+    if(votingPower.isLoading) {
         return (
             <Card className="text-center">
                 <CardHeader>
@@ -92,9 +92,9 @@ function ProposalCardSkeleton() {
 }
 
 function ActiveProposals() {
-    const { proposals, isLoading } = useGovernance();
+    const { proposals } = useGovernance();
 
-    if(isLoading) {
+    if(proposals.isLoading) {
         return (
              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 <ProposalCardSkeleton />

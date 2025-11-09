@@ -15,7 +15,7 @@ export function useGovernance() {
     const createProposal = async (targets: `0x${string}`[], values: bigint[], calldatas: `0x${string}`[], description: string) => {
         return writeContractAsync({
             abi: andeGovernorABI,
-            address: andeGovernorAddress,
+            address: andeGovernorAddress as `0x${string}`,
             functionName: 'propose',
             args: [targets, values, calldatas, description],
         });
@@ -24,7 +24,7 @@ export function useGovernance() {
     const vote = async (proposalId: bigint, support: 0 | 1 | 2) => {
         return writeContractAsync({
             abi: andeGovernorABI,
-            address: andeGovernorAddress,
+            address: andeGovernorAddress as `0x${string}`,
             functionName: 'vote',
             args: [proposalId, support],
         });

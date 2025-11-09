@@ -65,16 +65,3 @@ export async function GET() {
     headers: CORS_HEADERS
   })
 }
-```
-
-## 🔄 **Actualización del Faucet Component**
-
-Ahora vamos a actualizar el componente del faucet para usar el proxy:
-<tool_call>edit_file
-<arg_key>display_description</arg_key>
-<arg_value>Actualizar faucet para usar proxy RPC</arg_value>
-<arg_key>path</arg_key>
-<arg_value>/Users/munay/dev/ande-labs/ande-web/src/components/faucet/simple-faucet.tsx</arg_value>
-<arg_key>mode</arg_key>
-<arg_value>edit</arg_value>
-</tool_call>

@@ -124,42 +124,42 @@ export function useStaking() {
                 ...stakingContract,
                 abi: STAKING_READ_ABI,
                 functionName: 'getStakedAmount',
-                args: [address as `0x${string}`, BigInt(POOLS.light.id)],
+                args: [address as `0x${string}`, POOLS.light.id],
             },
             // Medium pool staked amount
             {
                 ...stakingContract,
                 abi: STAKING_READ_ABI,
                 functionName: 'getStakedAmount',
-                args: [address as `0x${string}`, BigInt(POOLS.medium.id)],
+                args: [address as `0x${string}`, POOLS.medium.id],
             },
             // Heavy pool staked amount
             {
                 ...stakingContract,
                 abi: STAKING_READ_ABI,
                 functionName: 'getStakedAmount',
-                args: [address as `0x${string}`, BigInt(POOLS.heavy.id)],
+                args: [address as `0x${string}`, POOLS.heavy.id],
             },
             // Light pool rewards
             {
                 ...stakingContract,
                 abi: STAKING_READ_ABI,
                 functionName: 'getEarnedRewards',
-                args: [address as `0x${string}`, BigInt(POOLS.light.id)],
+                args: [address as `0x${string}`, POOLS.light.id],
             },
             // Medium pool rewards
             {
                 ...stakingContract,
                 abi: STAKING_READ_ABI,
                 functionName: 'getEarnedRewards',
-                args: [address as `0x${string}`, BigInt(POOLS.medium.id)],
+                args: [address as `0x${string}`, POOLS.medium.id],
             },
             // Heavy pool rewards
             {
                 ...stakingContract,
                 abi: STAKING_READ_ABI,
                 functionName: 'getEarnedRewards',
-                args: [address as `0x${string}`, BigInt(POOLS.heavy.id)],
+                args: [address as `0x${string}`, POOLS.heavy.id],
             },
         ],
         query: {
@@ -176,14 +176,14 @@ export function useStaking() {
         
         return {
             staked: {
-                light: multicallData[0]?.result ? formatUnits(BigInt(multicallData[0].result), 18) : '0',
-                medium: multicallData[1]?.result ? formatUnits(BigInt(multicallData[1].result), 18) : '0',
-                heavy: multicallData[2]?.result ? formatUnits(BigInt(multicallData[2].result), 18) : '0',
+                light: multicallData[0]?.result ? formatUnits(multicallData[0].result, 18) : '0',
+                medium: multicallData[1]?.result ? formatUnits(multicallData[1].result, 18) : '0',
+                heavy: multicallData[2]?.result ? formatUnits(multicallData[2].result, 18) : '0',
             },
             rewards: {
-                light: multicallData[3]?.result ? formatUnits(BigInt(multicallData[3].result), 18) : '0',
-                medium: multicallData[4]?.result ? formatUnits(BigInt(multicallData[4].result), 18) : '0',
-                heavy: multicallData[5]?.result ? formatUnits(BigInt(multicallData[5].result), 18) : '0',
+                light: multicallData[3]?.result ? formatUnits(multicallData[3].result, 18) : '0',
+                medium: multicallData[4]?.result ? formatUnits(multicallData[4].result, 18) : '0',
+                heavy: multicallData[5]?.result ? formatUnits(multicallData[5].result, 18) : '0',
             },
         };
     }, [multicallData]);
@@ -197,7 +197,7 @@ export function useStaking() {
             ...stakingContract,
             abi: STAKING_WRITE_ABI,
             functionName: 'stake',
-            args: [parseEther(amount), BigInt(poolId)],
+            args: [parseEther(amount), poolId],
             value: parseEther(amount),
         });
     };
@@ -211,7 +211,7 @@ export function useStaking() {
             ...stakingContract,
             abi: STAKING_WRITE_ABI,
             functionName: 'unstake',
-            args: [parseEther(amount), BigInt(poolId)],
+            args: [parseEther(amount), poolId],
         });
     };
 
@@ -224,7 +224,7 @@ export function useStaking() {
             ...stakingContract,
             abi: STAKING_WRITE_ABI,
             functionName: 'claimRewards',
-            args: [BigInt(poolId)],
+            args: [poolId],
         });
     };
     
@@ -239,14 +239,14 @@ export function useStaking() {
         
         // Raw data
         stakingData: {
-            light: multicallData?.[0]?.result as bigint | undefined,
-            medium: multicallData?.[1]?.result as bigint | undefined,
-            heavy: multicallData?.[2]?.result as bigint | undefined,
+            light: multicallData?.[0]?.result,
+            medium: multicallData?.[1]?.result,
+            heavy: multicallData?.[2]?.result,
         },
         earnedRewards: {
-            light: multicallData?.[3]?.result as bigint | undefined,
-            medium: multicallData?.[4]?.result as bigint | undefined,
-            heavy: multicallData?.[5]?.result as bigint | undefined,
+            light: multicallData?.[3]?.result,
+            medium: multicallData?.[4]?.result,
+            heavy: multicallData?.[5]?.result,
         },
         
         // Formatted data for display

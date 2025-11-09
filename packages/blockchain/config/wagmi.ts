@@ -3,6 +3,7 @@ import { createConfig, http } from 'wagmi';
 import { andeNetwork } from './chains';
 import { metaMask } from 'wagmi/connectors';
 import { QueryClient } from '@tanstack/react-query';
+import { createPublicClient } from 'viem';
 
 if (!process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID) {
   console.warn(
@@ -14,7 +15,6 @@ export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 5000, // 5 seconds
-      cacheTime: 1000 * 60 * 5, // 5 minutes
       refetchOnWindowFocus: true,
     },
   },
@@ -38,3 +38,8 @@ export const wagmiConfig = createConfig({
   },
   ssr: true,
 });
+
+export const publicClient = createPublicClient({
+  chain: andeNetwork,
+  transport: http('https://rpc.ande.network')
+})
