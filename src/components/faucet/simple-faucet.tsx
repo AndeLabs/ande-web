@@ -9,7 +9,17 @@ import { Badge } from '@/components/ui/badge'
 import { Loader2, Droplets, Send, CheckCircle, AlertCircle, ExternalLink } from 'lucide-react'
 import { useAccount, useSwitchChain, useConnect } from 'wagmi'
 import { parseEther, formatEther } from 'viem'
-import { FAUCET_CONFIG } from '@/lib/faucet-config'
+
+// Faucet configuration (defined inline to avoid build issues)
+const FAUCET_CONFIG = {
+  address: '0x57349E2a5625B4563e323C82ac924749Be1d89c',
+  rpcUrl: 'https://rpc.ande.network',
+  chainId: 6174,
+  claimAmount: '100', // 100 ANDE
+  cooldownMs: 24 * 60 * 60 * 1000, // 24 horas
+  maxClaimsPerDay: 3,
+  explorerUrl: 'https://explorer.ande.network',
+} as const;
 
 interface FaucetResponse {
   success: boolean
