@@ -1,3 +1,6 @@
+// ISR - Regenerate this page every 1 hour
+export const revalidate = 3600;
+
 import {
     Card,
     CardContent,

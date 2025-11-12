@@ -1,3 +1,6 @@
+// ISR - Regenerate this page every 6 hours
+export const revalidate = 21600;
+
 export default function RoadmapPage() {
   return (
     <div className="container mx-auto py-12 px-4">
