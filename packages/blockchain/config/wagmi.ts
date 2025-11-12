@@ -13,9 +13,12 @@ if (!process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID) {
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5000, // 5 seconds
-      cacheTime: 1000 * 60 * 5, // 5 minutes
-      refetchOnWindowFocus: true,
+      staleTime: 5 * 60 * 1000, // 5 minutes - Aggressive caching for blockchain data
+      gcTime: 30 * 60 * 1000, // 30 minutes - Keep data in cache longer
+      refetchOnWindowFocus: false, // Don't refetch on window focus (manual refresh only)
+      refetchOnReconnect: true, // Refetch when internet reconnects
+      retry: 3, // Retry failed requests 3 times
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // Exponential backoff
     },
   },
 });

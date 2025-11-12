@@ -1,3 +1,6 @@
+// ISR - Regenerate this page every 1 hour
+export const revalidate = 3600;
+
 export default function TokenomicsPage() {
   return (
     <div className="container mx-auto py-12 px-4">

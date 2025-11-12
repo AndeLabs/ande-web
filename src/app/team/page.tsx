@@ -1,3 +1,6 @@
+// ISR - Regenerate this page every 24 hours
+export const revalidate = 86400;
+
 export default function TeamPage() {
   return (
     <div className="container mx-auto py-12 px-4">
