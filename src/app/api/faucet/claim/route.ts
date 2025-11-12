@@ -1,17 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { ethers } from 'ethers'
+import { FAUCET_CONFIG as PUBLIC_FAUCET_CONFIG } from '@/lib/faucet-config'
 
-// Configuración del faucet
+// Configuración del faucet (con partes privadas)
 const FAUCET_CONFIG = {
-  address: '0x57349E2a5625B4563e323C82ac924749Be1d89c',
+  ...PUBLIC_FAUCET_CONFIG,
   privateKey: process.env.FAUCET_PRIVATE_KEY || '',
-  rpcUrl: 'https://rpc.ande.network',
-  chainId: 6174,
   claimAmount: '100000000000000000000', // 100 ANDE en wei
   gasLimit: 21000,
   gasPrice: '20000000000', // 20 gwei en wei
-  cooldownMs: 24 * 60 * 60 * 1000, // 24 horas
-  maxClaimsPerDay: 3,
 }
 
 // Almacenamiento en memoria (para testnet)

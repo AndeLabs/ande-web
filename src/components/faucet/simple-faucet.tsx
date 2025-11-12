@@ -9,8 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { Loader2, Droplets, Send, CheckCircle, AlertCircle, ExternalLink } from 'lucide-react'
 import { useAccount, useSwitchChain, useConnect } from 'wagmi'
 import { parseEther, formatEther } from 'viem'
-
-
+import { FAUCET_CONFIG } from '@/lib/faucet-config'
 
 interface FaucetResponse {
   success: boolean
