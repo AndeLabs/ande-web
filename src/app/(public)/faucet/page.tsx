@@ -1,6 +1,9 @@
 import { SimpleFaucet } from '@/components/faucet/simple-faucet';
 import { Metadata } from 'next';
 
+// Disable prerendering for this page (contains client-only wagmi hooks)
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Faucet - AndeChain Testnet',
   description: 'Request free ANDE testnet tokens for development and testing on AndeChain',
