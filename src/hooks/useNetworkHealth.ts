@@ -1,8 +1,9 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { useBlockNumber, usePublicClient, useChainId } from 'wagmi';
-import { formatGwei } from 'viem';
+import { useBlockNumber, useChainId } from 'wagmi';
+import { formatGwei, createPublicClient, http } from 'viem';
+import { andeNetwork } from '../../packages/blockchain/config/chains';
 
 export interface NetworkHealth {
   isOnline: boolean;
@@ -26,8 +27,15 @@ const DEFAULT_HEALTH: NetworkHealth = {
   chainId: null,
 };
 
+// Create a standalone public client for health checks
+const healthCheckClient = createPublicClient({
+  chain: andeNetwork,
+  transport: http(andeNetwork.rpcUrls.default.http[0], {
+    timeout: 10000,
+  }),
+});
+
 export function useNetworkHealth() {
-  const publicClient = usePublicClient();
   const chainId = useChainId();
 
   const { data: blockNumber, isError: blockError } = useBlockNumber({
@@ -44,15 +52,14 @@ export function useNetworkHealth() {
       const startTime = Date.now();
 
       try {
-        if (!publicClient) {
-          throw new Error('Public client not available');
-        }
-
-        // Fetch gas price with timeout
-        const gasPrice = await Promise.race([
-          publicClient.getGasPrice(),
+        // Fetch block number and gas price with timeout
+        const [currentBlock, gasPrice] = await Promise.race([
+          Promise.all([
+            healthCheckClient.getBlockNumber(),
+            healthCheckClient.getGasPrice(),
+          ]),
           new Promise<never>((_, reject) =>
-            setTimeout(() => reject(new Error('Timeout')), 5000)
+            setTimeout(() => reject(new Error('Timeout')), 8000)
           ),
         ]);
 
@@ -70,27 +77,26 @@ export function useNetworkHealth() {
 
         return {
           isOnline: true,
-          blockNumber: blockNumber ?? null,
+          blockNumber: blockNumber ?? currentBlock ?? null,
           gasPrice: gasPrice ?? null,
           gasPriceGwei,
           latency,
           lastUpdated: Date.now(),
           status,
-          chainId,
+          chainId: chainId || 6174,
         };
       } catch (err) {
         console.error('[ANDE] Network health check failed:', err);
         return {
           ...DEFAULT_HEALTH,
           lastUpdated: Date.now(),
-          chainId,
+          chainId: chainId || 6174,
         };
       }
     },
     refetchInterval: 10_000, // Refetch every 10 seconds
     staleTime: 5_000, // 5 seconds
     gcTime: 30_000, // Keep in cache for 30 seconds
-    enabled: !!publicClient,
   });
 
   return {
