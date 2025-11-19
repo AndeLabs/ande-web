@@ -3,7 +3,7 @@ import Image from 'next/image';
 export function Logo() {
   return (
     <Image
-      src="/favicon.ico"
+      src="/logoofical.png"
       alt="ANDE Network Logo"
       width={32}
       height={32}

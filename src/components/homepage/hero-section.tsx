@@ -28,6 +28,23 @@ export function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
+          {/* Logo */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.1, duration: 0.6 }}
+            className="mb-6"
+          >
+            <Image
+              src="/logorealistagrande.png"
+              alt="ANDE Network Logo"
+              width={120}
+              height={120}
+              className="mx-auto animate-float"
+              priority
+            />
+          </motion.div>
+
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}

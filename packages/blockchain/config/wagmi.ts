@@ -42,7 +42,7 @@ const andeMetadata = {
   name: 'ANDE Network',
   description: 'The Sovereign Rollup for Latin America',
   url: 'https://ande.network',
-  icons: ['https://ande.network/logo.png'],
+  icons: ['https://ande.network/logoofical.png'],
 };
 
 /**
