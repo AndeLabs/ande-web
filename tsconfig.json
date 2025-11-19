@@ -20,6 +20,7 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
+      "@workspace/blockchain": ["./packages/blockchain/hooks/index.ts"],
       "packages/*": ["./packages/*"]
     }
   },

@@ -1,4 +1,5 @@
 import type {NextConfig} from 'next';
+import path from 'path';
 
 const nextConfig: NextConfig = {
   typescript: {
@@ -6,6 +7,13 @@ const nextConfig: NextConfig = {
   },
   eslint: {
     ignoreDuringBuilds: true,
+  },
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@workspace/blockchain': path.resolve(__dirname, 'packages/blockchain/hooks/index.ts'),
+    };
+    return config;
   },
   images: {
     formats: ['image/webp', 'image/avif'],
