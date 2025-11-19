@@ -52,14 +52,14 @@ export function useNetworkHealth() {
       const startTime = Date.now();
 
       try {
-        // Fetch block number and gas price with timeout
+        // First try direct RPC call
         const [currentBlock, gasPrice] = await Promise.race([
           Promise.all([
             healthCheckClient.getBlockNumber(),
             healthCheckClient.getGasPrice(),
           ]),
           new Promise<never>((_, reject) =>
-            setTimeout(() => reject(new Error('Timeout')), 8000)
+            setTimeout(() => reject(new Error('Timeout')), 15000)
           ),
         ]);
 
@@ -86,6 +86,30 @@ export function useNetworkHealth() {
           chainId: chainId || 6174,
         };
       } catch (err) {
+        // Fallback to server-side API health check
+        try {
+          const response = await fetch('/api/health');
+          const apiHealth = await response.json();
+
+          if (apiHealth.uptime && apiHealth.checks) {
+            const latency = Date.now() - startTime;
+            return {
+              isOnline: true,
+              blockNumber: apiHealth.checks.blockHeight?.blockNumber
+                ? BigInt(apiHealth.checks.blockHeight.blockNumber)
+                : null,
+              gasPrice: null,
+              gasPriceGwei: apiHealth.checks.gasPrice?.gasPrice?.replace(' Gwei', '') || '0.0000',
+              latency: apiHealth.checks.rpc?.latency || latency,
+              lastUpdated: Date.now(),
+              status: apiHealth.status === 'healthy' ? 'operational' : 'degraded',
+              chainId: chainId || 6174,
+            };
+          }
+        } catch (apiErr) {
+          console.error('[ANDE] API health check also failed:', apiErr);
+        }
+
         console.error('[ANDE] Network health check failed:', err);
         return {
           ...DEFAULT_HEALTH,
