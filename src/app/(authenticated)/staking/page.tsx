@@ -35,7 +35,7 @@ const poolInfo = {
 };
 
 export default function StakingPage() {
-  const { stakingData, pools, isLoading, isError } = useStaking();
+  const { stakingData, earnedRewards, pools, isLoading, isError } = useStaking();
 
   if (isLoading) {
     return (
@@ -71,17 +71,17 @@ export default function StakingPage() {
         <StakingCard
           pool={poolInfo.light}
           userStake={stakingData.light ? formatAmount(stakingData.light, 18, 4) : '0'}
-          earnedRewards={'0'} // Placeholder
+          earnedRewards={earnedRewards.light ? formatAmount(earnedRewards.light, 18, 4) : '0'}
         />
         <StakingCard
           pool={poolInfo.medium}
           userStake={stakingData.medium ? formatAmount(stakingData.medium, 18, 4) : '0'}
-          earnedRewards={'0'} // Placeholder
+          earnedRewards={earnedRewards.medium ? formatAmount(earnedRewards.medium, 18, 4) : '0'}
         />
         <StakingCard
           pool={poolInfo.heavy}
           userStake={stakingData.heavy ? formatAmount(stakingData.heavy, 18, 4) : '0'}
-          earnedRewards={'0'} // Placeholder
+          earnedRewards={earnedRewards.heavy ? formatAmount(earnedRewards.heavy, 18, 4) : '0'}
         />
       </div>
     </div>

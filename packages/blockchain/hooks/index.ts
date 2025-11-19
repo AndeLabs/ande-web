@@ -14,3 +14,6 @@ export * from './useGovernance';
 export * from './useTransactions';
 export * from './useBlockNumber';
 export * from './useGasPrice';
+
+// Blockscout API hooks
+export * from './useBlockscout';

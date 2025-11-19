@@ -1,10 +1,36 @@
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Users, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
+
 export default function DelegationPage() {
-    return (
-      <div className="container mx-auto py-12 px-4">
-        <h1 className="text-4xl font-bold">Delegate Your Votes</h1>
-        <p className="mt-4 text-lg text-muted-foreground">
-          I will leave this placeholder for you to add real information later.
-        </p>
-      </div>
-    );
-  }
+  return (
+    <div className="container mx-auto py-12 px-4 max-w-4xl">
+      <Card className="text-center">
+        <CardContent className="py-12">
+          <Badge className="mb-4 bg-orange-500/10 text-orange-500 border-orange-500/20">
+            Coming Soon
+          </Badge>
+          <Users className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
+          <h1 className="text-2xl font-bold mb-2">Vote Delegation</h1>
+          <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+            Delegate your voting power to trusted community members.
+            This feature will be available when governance launches in Q1 2025.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Button asChild>
+              <Link href="/governance/proposals">
+                View Proposals
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+            <Button variant="outline" asChild>
+              <Link href="/staking">Stake ANDE</Link>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

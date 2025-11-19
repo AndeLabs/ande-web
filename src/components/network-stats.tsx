@@ -6,9 +6,9 @@ import {
   Cpu,
   ListChecks,
   Network,
-  Server,
   Timer,
   Wrench,
+  Blocks,
 } from 'lucide-react';
 import { analyzeNetworkHealth } from '@/ai/flows/network-health-analyzer';
 import type { NetworkHealthOutput } from '@/ai/flows/network-health-analyzer';
@@ -24,39 +24,53 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { Skeleton } from '@/components/ui/skeleton';
 import Image from 'next/image';
-import placeholderImages from '@/lib/placeholder-images.json';
-
-const metrics = [
-  {
-    name: 'Transaction Volume',
-    value: '1,234,567',
-    unit: 'TXs',
-    icon: ArrowRightLeft,
-  },
-  { name: 'Avg. Block Time', value: '2.1', unit: 's', icon: Timer },
-  {
-    name: 'Network Utilization',
-    value: '65',
-    unit: '%',
-    icon: Network,
-  },
-  { name: 'Active Nodes', value: '512', icon: Server },
-];
+import { useNetworkMetrics } from 'packages/blockchain/hooks';
 
 export default function NetworkStats() {
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState<NetworkHealthOutput | null>(null);
   const { toast } = useToast();
+  const { stats, isLoading: statsLoading } = useNetworkMetrics();
+
+  // Build metrics array from real data
+  const metrics = stats ? [
+    {
+      name: 'Total Transactions',
+      value: stats.totalTransactions.toLocaleString(),
+      unit: 'TXs',
+      icon: ArrowRightLeft,
+    },
+    {
+      name: 'Avg. Block Time',
+      value: stats.avgBlockTime.toFixed(1),
+      unit: 's',
+      icon: Timer
+    },
+    {
+      name: 'Network Utilization',
+      value: stats.networkUtilization.toFixed(1),
+      unit: '%',
+      icon: Network,
+    },
+    {
+      name: 'Total Blocks',
+      value: stats.totalBlocks.toLocaleString(),
+      icon: Blocks
+    },
+  ] : [];
 
   const handleAnalysis = async () => {
+    if (!stats) return;
+
     setLoading(true);
     setAnalysis(null);
     const networkMetrics = JSON.stringify({
-      transactionVolume: 1234567,
-      blockTime: 2.1,
-      networkUtilization: 65,
-      activeNodes: 512,
+      transactionVolume: stats.totalTransactions,
+      blockTime: stats.avgBlockTime,
+      networkUtilization: stats.networkUtilization,
+      totalBlocks: stats.totalBlocks,
     });
     try {
       const result = await analyzeNetworkHealth({ networkMetrics });
@@ -89,14 +103,7 @@ export default function NetworkStats() {
 
   return (
     <>
-      <section className="relative w-full h-[400px] overflow-hidden rounded-lg">
-        <Image
-            src={placeholderImages.abstractNetwork.stats}
-            alt="Abstract network"
-            fill
-            className="object-cover"
-            data-ai-hint="abstract network"
-          />
+      <section className="relative w-full h-[400px] overflow-hidden rounded-lg bg-gradient-to-br from-primary/20 to-brand-orange/20">
         <div className="absolute inset-0 bg-hero-gradient opacity-80 mix-blend-multiply" />
         <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-primary-foreground p-4">
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter animate-float">
@@ -111,26 +118,41 @@ export default function NetworkStats() {
       <section className="py-12">
         <div className="container mx-auto px-4">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {metrics.map(metric => (
-              <Card key={metric.name} className="hover:shadow-lg transition-shadow">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    {metric.name}
-                  </CardTitle>
-                  <metric.icon className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">
-                    {metric.value}
-                    {metric.unit && (
-                      <span className="text-xs text-muted-foreground ml-1">
-                        {metric.unit}
-                      </span>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+            {statsLoading ? (
+              // Loading skeletons
+              Array.from({ length: 4 }).map((_, i) => (
+                <Card key={i} className="hover:shadow-lg transition-shadow">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-4 w-4" />
+                  </CardHeader>
+                  <CardContent>
+                    <Skeleton className="h-8 w-20" />
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              metrics.map(metric => (
+                <Card key={metric.name} className="hover:shadow-lg transition-shadow">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">
+                      {metric.name}
+                    </CardTitle>
+                    <metric.icon className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">
+                      {metric.value}
+                      {metric.unit && (
+                        <span className="text-xs text-muted-foreground ml-1">
+                          {metric.unit}
+                        </span>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
 
           <Card className="mt-8 w-full bg-card-gradient text-primary-foreground">

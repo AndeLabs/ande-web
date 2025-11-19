@@ -1,9 +1,11 @@
 'use client';
 
 import { useNetworkHealth } from '@/hooks/useNetworkHealth';
-import { Activity, Zap, Clock, TrendingUp, Users } from 'lucide-react';
+import { useNetworkMetrics } from 'packages/blockchain/hooks';
+import { Activity, Zap, Clock, TrendingUp, Users, Blocks } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const container = {
   hidden: { opacity: 0 },
@@ -22,43 +24,44 @@ const item = {
 
 export function NetworkStatsLive() {
   const { data: health } = useNetworkHealth();
+  const { stats: blockscoutStats, isLoading } = useNetworkMetrics();
 
   const stats = [
     {
       name: 'Current Block',
-      value: health.blockNumber?.toString() || 'Loading...',
+      value: blockscoutStats?.totalBlocks.toLocaleString() || health.blockNumber?.toString() || 'Loading...',
       icon: Activity,
       color: 'text-blue-500',
       bgColor: 'bg-blue-500/10',
     },
     {
       name: 'Gas Price',
-      value: `${health.gasPriceGwei} Gwei`,
+      value: blockscoutStats ? `${blockscoutStats.gasPrice.toFixed(4)} Gwei` : `${health.gasPriceGwei} Gwei`,
       icon: Zap,
       color: 'text-yellow-500',
       bgColor: 'bg-yellow-500/10',
     },
     {
-      name: 'Network Latency',
-      value: `${health.latency}ms`,
-      icon: Clock,
-      color: 'text-green-500',
-      bgColor: 'bg-green-500/10',
-    },
-    {
-      name: 'TPS',
-      value: '~15',
+      name: 'Total Transactions',
+      value: blockscoutStats?.totalTransactions.toLocaleString() || '...',
       icon: TrendingUp,
       color: 'text-purple-500',
       bgColor: 'bg-purple-500/10',
-      subtitle: 'Transactions per second',
+    },
+    {
+      name: 'Total Addresses',
+      value: blockscoutStats?.totalAddresses.toLocaleString() || '...',
+      icon: Users,
+      color: 'text-orange-500',
+      bgColor: 'bg-orange-500/10',
     },
     {
       name: 'Status',
       value: health.isOnline ? 'Online' : 'Offline',
-      icon: Users,
+      icon: Blocks,
       color: health.isOnline ? 'text-green-500' : 'text-red-500',
       bgColor: health.isOnline ? 'bg-green-500/10' : 'bg-red-500/10',
+      subtitle: blockscoutStats ? `${blockscoutStats.avgBlockTime.toFixed(1)}s block time` : undefined,
     },
   ];
 
