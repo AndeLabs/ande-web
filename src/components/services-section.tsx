@@ -29,11 +29,11 @@ const SERVICES = [
     title: 'Testnet Faucet',
     description: 'Get free ANDE tokens for testing and development on testnet',
     icon: Droplet,
-    href: '/faucet',
+    href: 'https://faucet.ande.network',
     buttonText: 'Request Tokens',
-    external: false,
+    external: true,
     features: [
-      '10 ANDE per request',
+      '100 ANDE per request',
       '24-hour cooldown',
       'No prerequisites',
       'Instant delivery'

@@ -90,7 +90,7 @@ console.log('Deployed to:', contract.target);`;
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <Link href="/faucet">Get Testnet Tokens</Link>
+                <a href="https://faucet.ande.network" target="_blank" rel="noopener noreferrer">Get Testnet Tokens</a>
               </Button>
             </div>
           </motion.div>

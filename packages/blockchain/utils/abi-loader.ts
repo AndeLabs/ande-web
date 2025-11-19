@@ -1,8 +1,7 @@
 'use client';
 
-import { publicClient } from '../config/wagmi';
 import { Address, Abi } from 'viem';
-import { getAndeChain } from '../config/chains';
+import { getAndeChain, CHAIN_CONFIG } from '../config/chains';
 
 /**
  * Runtime ABI Loader

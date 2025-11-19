@@ -38,7 +38,7 @@ export function Footer() {
             <li><Link href="/blog" className="text-muted-foreground hover:text-foreground">Blog</Link></li>
             <li><Link href="/about" className="text-muted-foreground hover:text-foreground">About Us</Link></li>
             <li><a href="https://explorer.ande.network" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">Block Explorer</a></li>
-            <li><Link href="/faucet" className="text-muted-foreground hover:text-foreground">Testnet Faucet</Link></li>
+            <li><a href="https://faucet.ande.network" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">Testnet Faucet</a></li>
           </ul>
         </div>
         <div>

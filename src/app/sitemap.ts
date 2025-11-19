@@ -15,7 +15,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/docs/getting-started',
     '/docs/developers',
     '/docs/api',
-    '/faucet',
     '/staking',
     '/staking/light',
     '/staking/medium',

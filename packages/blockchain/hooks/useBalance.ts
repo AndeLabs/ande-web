@@ -5,7 +5,6 @@ import { useReadContract } from 'wagmi';
 import { formatUnits } from 'viem';
 import { useMemo } from 'react';
 import { ANDETokenDualityAddress } from '../config/contracts';
-import { loadContractABI } from '../utils/abi-loader';
 
 /**
  * Hook para obtener el balance nativo (ANDE)
@@ -76,6 +75,6 @@ export function useANDETokenBalance(userAddress?: string) {
         isLoading,
         isError,
         error,
-        rawBalance: data ? BigInt(data) : 0n,
+        rawBalance: data ? BigInt(data) : BigInt(0),
     };
 }

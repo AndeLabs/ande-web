@@ -67,10 +67,10 @@ export function HeroSection() {
               size="lg"
               className="text-lg px-8 py-6 shadow-glow-orange group"
             >
-              <Link href="/faucet">
+              <a href="https://faucet.ande.network" target="_blank" rel="noopener noreferrer">
                 Get Testnet Tokens
                 <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
-              </Link>
+              </a>
             </Button>
             <Button asChild variant="outline" size="lg" className="text-lg px-8 py-6">
               <Link href="/docs">

@@ -59,7 +59,7 @@ function PortfolioOverview() {
 
 function StakingSummary() {
     const { stakingData, isLoading } = useStaking();
-    const totalStaked = Object.values(stakingData).reduce((acc, val) => acc + (val || BigInt(0)), BigInt(0));
+    const totalStaked = Object.values(stakingData).reduce((acc: bigint, val) => acc + (val || BigInt(0)), BigInt(0));
 
     if (isLoading) {
       return (
@@ -84,7 +84,7 @@ function StakingSummary() {
             </CardHeader>
             <CardContent>
                 <div>
-                    <p className="text-3xl font-bold">{formatAmount(totalStaked, 18, 4)} ANDE</p>
+                    <p className="text-3xl font-bold">{formatAmount(totalStaked ?? BigInt(0), 18, 4)} ANDE</p>
                     <p className="text-sm text-muted-foreground">Across all pools</p>
                 </div>
             </CardContent>

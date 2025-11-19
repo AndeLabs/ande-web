@@ -112,9 +112,9 @@ export function useStaking() {
      * Multicall: Fetch staked amounts and rewards for all pools in a single RPC call
      * This is significantly more efficient than three separate calls
      */
-    const { 
-        data: multicallData, 
-        isLoading: isStakingDataLoading, 
+    const {
+        data: multicallData,
+        isLoading: isStakingDataLoading,
         isError: isStakingDataError,
         error: dataError,
     } = useReadContracts({
@@ -124,42 +124,42 @@ export function useStaking() {
                 ...stakingContract,
                 abi: STAKING_READ_ABI,
                 functionName: 'getStakedAmount',
-                args: [address as `0x${string}`, BigInt(POOLS.light.id)],
+                args: [address as `0x${string}`, POOLS.light.id],
             },
             // Medium pool staked amount
             {
                 ...stakingContract,
                 abi: STAKING_READ_ABI,
                 functionName: 'getStakedAmount',
-                args: [address as `0x${string}`, BigInt(POOLS.medium.id)],
+                args: [address as `0x${string}`, POOLS.medium.id],
             },
             // Heavy pool staked amount
             {
                 ...stakingContract,
                 abi: STAKING_READ_ABI,
                 functionName: 'getStakedAmount',
-                args: [address as `0x${string}`, BigInt(POOLS.heavy.id)],
+                args: [address as `0x${string}`, POOLS.heavy.id],
             },
             // Light pool rewards
             {
                 ...stakingContract,
                 abi: STAKING_READ_ABI,
                 functionName: 'getEarnedRewards',
-                args: [address as `0x${string}`, BigInt(POOLS.light.id)],
+                args: [address as `0x${string}`, POOLS.light.id],
             },
             // Medium pool rewards
             {
                 ...stakingContract,
                 abi: STAKING_READ_ABI,
                 functionName: 'getEarnedRewards',
-                args: [address as `0x${string}`, BigInt(POOLS.medium.id)],
+                args: [address as `0x${string}`, POOLS.medium.id],
             },
             // Heavy pool rewards
             {
                 ...stakingContract,
                 abi: STAKING_READ_ABI,
                 functionName: 'getEarnedRewards',
-                args: [address as `0x${string}`, BigInt(POOLS.heavy.id)],
+                args: [address as `0x${string}`, POOLS.heavy.id],
             },
         ],
         query: {
@@ -197,7 +197,7 @@ export function useStaking() {
             ...stakingContract,
             abi: STAKING_WRITE_ABI,
             functionName: 'stake',
-            args: [parseEther(amount), BigInt(poolId)],
+            args: [parseEther(amount), poolId],
             value: parseEther(amount),
         });
     };
@@ -211,7 +211,7 @@ export function useStaking() {
             ...stakingContract,
             abi: STAKING_WRITE_ABI,
             functionName: 'unstake',
-            args: [parseEther(amount), BigInt(poolId)],
+            args: [parseEther(amount), poolId],
         });
     };
 
@@ -224,7 +224,7 @@ export function useStaking() {
             ...stakingContract,
             abi: STAKING_WRITE_ABI,
             functionName: 'claimRewards',
-            args: [BigInt(poolId)],
+            args: [poolId],
         });
     };
     

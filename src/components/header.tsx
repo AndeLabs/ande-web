@@ -21,8 +21,8 @@ const mainNavLinks = [
 
 const appNavLinks = [
     { href: "/dashboard", label: "Dashboard"},
-    { href: "/explorer", label: "Explorer"},
-    { href: "/faucet", label: "Faucet"},
+    { href: "https://explorer.ande.network", label: "Explorer", external: true },
+    { href: "https://faucet.ande.network", label: "Faucet", external: true },
     { href: "/stats", label: "Stats"},
 ]
 
