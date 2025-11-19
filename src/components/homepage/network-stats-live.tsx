@@ -2,7 +2,7 @@
 
 import { useNetworkHealth } from '@/hooks/useNetworkHealth';
 import { useNetworkMetrics } from 'packages/blockchain/hooks';
-import { Activity, Zap, Clock, TrendingUp, Users, Blocks } from 'lucide-react';
+import { Activity, Zap, Clock, TrendingUp, Users, Blocks, Gauge } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -42,11 +42,20 @@ export function NetworkStatsLive() {
       bgColor: 'bg-yellow-500/10',
     },
     {
+      name: 'TPS',
+      value: blockscoutStats?.tps ? blockscoutStats.tps.toFixed(2) : '0',
+      icon: Gauge,
+      color: 'text-cyan-500',
+      bgColor: 'bg-cyan-500/10',
+      subtitle: 'Transactions per second',
+    },
+    {
       name: 'Total Transactions',
       value: blockscoutStats?.totalTransactions.toLocaleString() || '...',
       icon: TrendingUp,
       color: 'text-purple-500',
       bgColor: 'bg-purple-500/10',
+      subtitle: blockscoutStats?.transactionsToday ? `${blockscoutStats.transactionsToday.toLocaleString()} today` : undefined,
     },
     {
       name: 'Total Addresses',
@@ -89,7 +98,7 @@ export function NetworkStatsLive() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 md:gap-6"
         >
           {stats.map((stat) => {
             const Icon = stat.icon;

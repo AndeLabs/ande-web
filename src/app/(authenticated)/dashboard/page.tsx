@@ -50,7 +50,7 @@ function PortfolioOverview() {
       <CardContent>
         <div>
           <p className="text-3xl font-bold">{formatAmount(BigInt(formattedBalance || 0), 18, 4)} ANDE</p>
-          <p className="text-sm text-muted-foreground">~ $0.00 USD</p>
+          <p className="text-sm text-muted-foreground">Price oracle coming soon</p>
         </div>
       </CardContent>
     </Card>
