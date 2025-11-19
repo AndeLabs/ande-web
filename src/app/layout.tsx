@@ -7,7 +7,6 @@ import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { Providers } from './providers';
 import { Inter } from 'next/font/google';
-import placeholderImages from '@/lib/placeholder-images.json';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { NetworkStatusBanner } from '@/components/network-status-banner';
@@ -40,7 +39,13 @@ export const metadata: Metadata = {
   creator: 'ANDE Labs',
   publisher: 'ANDE Labs',
   icons: {
-    icon: '/favicon.ico',
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon-32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: '/apple-touch-icon.png',
   },
   openGraph: {
     type: 'website',
@@ -51,10 +56,10 @@ export const metadata: Metadata = {
     description: 'Fast, cheap, and truly sovereign EVM rollup built for Latin America. Experience the future of blockchain.',
     images: [
       {
-        url: placeholderImages.abstractNetwork.og,
+        url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'ANDE Network - Sovereign Rollup',
+        alt: 'ANDE Network - Sovereign Rollup for Latin America',
       },
     ],
   },
@@ -62,8 +67,8 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'ANDE Network - The Sovereign Rollup for Latin America',
     description: 'Fast, cheap, and truly sovereign EVM rollup built for Latin America',
-    images: [placeholderImages.abstractNetwork.og],
-    creator: '@ANDENetwork',
+    images: ['/og-image.png'],
+    creator: '@AndeNetwork',
   },
   robots: {
     index: true,

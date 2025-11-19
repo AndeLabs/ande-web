@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Code, Terminal, Rocket, Book } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function DeveloperQuickstart() {
   const codeExample = `// Connect to ANDE Network
@@ -49,9 +50,18 @@ console.log('Deployed to:', contract.target);`;
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl md:text-5xl font-bold mb-4">
-            Start Building in Minutes
-          </h2>
+          <div className="flex items-center justify-center gap-6 mb-4">
+            <Image
+              src="/images/brand/personajeandeexplorando.png"
+              alt="ANDE exploring"
+              width={120}
+              height={120}
+              className="hidden md:block"
+            />
+            <h2 className="text-3xl md:text-5xl font-bold">
+              Start Building in Minutes
+            </h2>
+          </div>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             ANDE is fully EVM compatible. Use the same tools you already know
             and love.

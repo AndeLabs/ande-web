@@ -3,6 +3,7 @@
 import { Globe, Zap, Droplets, Lock, Code, Shield } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 const features = [
   {
@@ -88,6 +89,23 @@ export function FeaturesSection() {
             ANDE Network combines the best of blockchain technology to create a
             platform that's fast, affordable, and truly decentralized.
           </p>
+        </motion.div>
+
+        {/* Character Image */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="flex justify-center mb-12"
+        >
+          <Image
+            src="/images/brand/andeusandotecnologia.png"
+            alt="ANDE using technology"
+            width={300}
+            height={300}
+            className="opacity-90"
+          />
         </motion.div>
 
         <motion.div

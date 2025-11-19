@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Github, Book } from 'lucide-react';
-import placeholderImages from '@/lib/placeholder-images.json';
 import { motion } from 'framer-motion';
 
 export function HeroSection() {
@@ -12,12 +11,11 @@ export function HeroSection() {
     <section className="relative w-full h-[90vh] min-h-[700px] overflow-hidden">
       {/* Background Image */}
       <Image
-        src={placeholderImages.abstractNetwork.hero}
-        alt="Abstract network"
+        src="/images/brand/andeenciudadtecnolgica.png"
+        alt="ANDE in Technology City"
         fill
         priority
-        className="object-cover animate-gradient"
-        data-ai-hint="abstract network"
+        className="object-cover opacity-30"
       />
       <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/80 to-background" />
 
