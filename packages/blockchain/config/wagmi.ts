@@ -41,8 +41,8 @@ export const queryClient = new QueryClient({
 const andeMetadata = {
   name: 'ANDE Network',
   description: 'The Sovereign Rollup for Latin America',
-  url: 'https://ande.network',
-  icons: ['https://ande.network/logoofical.png'],
+  url: 'https://www.ande.network',
+  icons: ['https://www.ande.network/logoofical.png'],
 };
 
 /**
