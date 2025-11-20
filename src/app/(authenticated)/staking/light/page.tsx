@@ -61,8 +61,8 @@ export default function StakingLightPage() {
 
   const { formattedBalance } = useBalance();
 
-  const userStaked = stakingData.light ? formatAmount(stakingData.light, 18, 4) : '0';
-  const userRewards = earnedRewards.light ? formatAmount(earnedRewards.light, 18, 6) : '0';
+  const userStaked = stakingData.light ? formatAmount(stakingData.light) : '0';
+  const userRewards = earnedRewards.light ? formatAmount(earnedRewards.light) : '0';
 
   const handleStake = async () => {
     if (!stakeAmount || parseFloat(stakeAmount) < parseFloat(POOL_INFO.minStake)) {

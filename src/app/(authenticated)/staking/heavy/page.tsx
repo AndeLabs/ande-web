@@ -59,8 +59,8 @@ export default function StakingHeavyPage() {
 
   const { formattedBalance } = useBalance();
 
-  const userStaked = stakingData.heavy ? formatAmount(stakingData.heavy, 18, 4) : '0';
-  const userRewards = earnedRewards.heavy ? formatAmount(earnedRewards.heavy, 18, 6) : '0';
+  const userStaked = stakingData.heavy ? formatAmount(stakingData.heavy) : '0';
+  const userRewards = earnedRewards.heavy ? formatAmount(earnedRewards.heavy) : '0';
 
   const handleStake = async () => {
     if (!stakeAmount || parseFloat(stakeAmount) < parseFloat(POOL_INFO.minStake)) {

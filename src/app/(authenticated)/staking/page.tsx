@@ -70,18 +70,18 @@ export default function StakingPage() {
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         <StakingCard
           pool={poolInfo.light}
-          userStake={stakingData.light ? formatAmount(stakingData.light, 18, 4) : '0'}
-          earnedRewards={earnedRewards.light ? formatAmount(earnedRewards.light, 18, 4) : '0'}
+          userStake={stakingData.light ? formatAmount(stakingData.light) : '0'}
+          earnedRewards={earnedRewards.light ? formatAmount(earnedRewards.light) : '0'}
         />
         <StakingCard
           pool={poolInfo.medium}
-          userStake={stakingData.medium ? formatAmount(stakingData.medium, 18, 4) : '0'}
-          earnedRewards={earnedRewards.medium ? formatAmount(earnedRewards.medium, 18, 4) : '0'}
+          userStake={stakingData.medium ? formatAmount(stakingData.medium) : '0'}
+          earnedRewards={earnedRewards.medium ? formatAmount(earnedRewards.medium) : '0'}
         />
         <StakingCard
           pool={poolInfo.heavy}
-          userStake={stakingData.heavy ? formatAmount(stakingData.heavy, 18, 4) : '0'}
-          earnedRewards={earnedRewards.heavy ? formatAmount(earnedRewards.heavy, 18, 4) : '0'}
+          userStake={stakingData.heavy ? formatAmount(stakingData.heavy) : '0'}
+          earnedRewards={earnedRewards.heavy ? formatAmount(earnedRewards.heavy) : '0'}
         />
       </div>
     </div>

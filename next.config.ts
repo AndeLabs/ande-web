@@ -8,11 +8,31 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  webpack: (config) => {
+  webpack: (config, { isServer }) => {
     config.resolve.alias = {
       ...config.resolve.alias,
       '@workspace/blockchain': path.resolve(__dirname, 'packages/blockchain/hooks/index.ts'),
     };
+
+    // Handle WalletConnect/MetaMask SDK modules that require browser APIs
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      };
+    }
+
+    // Ignore problematic modules during SSR
+    config.externals = config.externals || [];
+    if (isServer) {
+      config.externals.push({
+        'pino-pretty': 'pino-pretty',
+        '@react-native-async-storage/async-storage': '@react-native-async-storage/async-storage',
+      });
+    }
+
     return config;
   },
   images: {

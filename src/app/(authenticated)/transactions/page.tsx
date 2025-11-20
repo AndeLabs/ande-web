@@ -29,10 +29,13 @@ import {
   CheckCircle2,
   XCircle,
   Clock,
+  Wallet,
 } from 'lucide-react';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { SendAndeDialog } from '@/components/send-ande-dialog';
 
 function truncateAddress(address: string) {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
@@ -72,64 +75,83 @@ export default function TransactionsPage() {
 
   if (!isConnected) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Transaction History</CardTitle>
-          <CardDescription>
-            Connect your wallet to view your transaction history.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground">
-            Please connect your wallet to see your transactions on ANDE Network.
-          </p>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Transaction History</CardTitle>
-          <CardDescription>Loading your transactions...</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="flex items-center space-x-4">
-              <Skeleton className="h-12 w-12 rounded-full" />
-              <div className="space-y-2 flex-1">
-                <Skeleton className="h-4 w-[250px]" />
-                <Skeleton className="h-4 w-[200px]" />
-              </div>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (error) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Transaction History</CardTitle>
-          <CardDescription>Error loading transactions</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-destructive">
-            Failed to load transactions. Please try again later.
-          </p>
-        </CardContent>
-      </Card>
+      <div className="container mx-auto py-6">
+        <Card>
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <Wallet className="h-16 w-16 text-muted-foreground mb-4" />
+            <h2 className="text-2xl font-bold mb-2">Connect Your Wallet</h2>
+            <p className="text-muted-foreground text-center mb-6 max-w-md">
+              Connect your wallet to send ANDE tokens and view your transaction history.
+            </p>
+            <ConnectButton />
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
   const transactions = data?.items || [];
 
   return (
-    <div className="space-y-6">
+    <div className="container mx-auto py-6 space-y-6">
+      {/* Header with Send Button */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold">Transactions</h1>
+          <p className="text-muted-foreground">
+            Send ANDE and view your transaction history
+          </p>
+        </div>
+        <SendAndeDialog buttonSize="lg" />
+      </div>
+
+      {/* Quick Stats */}
+      <div className="grid gap-4 md:grid-cols-3">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Total Transactions
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold">{transactions.length}</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Total Sent
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold text-red-500">
+              {formatAmount(
+                transactions
+                  .filter((tx) => tx.from.hash.toLowerCase() === address?.toLowerCase())
+                  .reduce((sum, tx) => sum + BigInt(tx.value), BigInt(0))
+              )} ANDE
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Total Received
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold text-green-500">
+              {formatAmount(
+                transactions
+                  .filter((tx) => tx.from.hash.toLowerCase() !== address?.toLowerCase())
+                  .reduce((sum, tx) => sum + BigInt(tx.value), BigInt(0))
+              )} ANDE
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Transaction History */}
       <Card>
         <CardHeader>
           <CardTitle>Transaction History</CardTitle>
@@ -138,18 +160,39 @@ export default function TransactionsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {transactions.length === 0 ? (
+          {isLoading ? (
+            <div className="space-y-4">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="flex items-center space-x-4">
+                  <Skeleton className="h-12 w-12 rounded-full" />
+                  <div className="space-y-2 flex-1">
+                    <Skeleton className="h-4 w-[250px]" />
+                    <Skeleton className="h-4 w-[200px]" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : error ? (
+            <div className="text-center py-8">
+              <XCircle className="mx-auto h-12 w-12 text-destructive mb-4" />
+              <p className="text-lg font-medium">Failed to load transactions</p>
+              <p className="text-muted-foreground">Please try again later.</p>
+            </div>
+          ) : transactions.length === 0 ? (
             <div className="text-center py-8">
               <Clock className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
               <p className="text-lg font-medium">No transactions yet</p>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground mb-4">
                 Your transactions will appear here once you make your first transfer.
               </p>
-              <Button asChild className="mt-4">
-                <Link href="https://faucet.ande.network" target="_blank">
-                  Get Testnet Tokens
-                </Link>
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                <SendAndeDialog />
+                <Button variant="outline" asChild>
+                  <Link href="https://faucet.ande.network" target="_blank">
+                    Get Testnet Tokens
+                  </Link>
+                </Button>
+              </div>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -214,7 +257,7 @@ export default function TransactionsPage() {
                         </TableCell>
                         <TableCell>
                           <span className="font-mono">
-                            {formatAmount(BigInt(tx.value), 18, 4)} ANDE
+                            {formatAmount(BigInt(tx.value))} ANDE
                           </span>
                         </TableCell>
                         <TableCell>
@@ -257,56 +300,6 @@ export default function TransactionsPage() {
           )}
         </CardContent>
       </Card>
-
-      {/* Transaction Stats */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total Transactions
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">{transactions.length}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total Sent
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">
-              {formatAmount(
-                transactions
-                  .filter((tx) => tx.from.hash.toLowerCase() === address?.toLowerCase())
-                  .reduce((sum, tx) => sum + BigInt(tx.value), BigInt(0)),
-                18,
-                2
-              )} ANDE
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total Received
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">
-              {formatAmount(
-                transactions
-                  .filter((tx) => tx.from.hash.toLowerCase() !== address?.toLowerCase())
-                  .reduce((sum, tx) => sum + BigInt(tx.value), BigInt(0)),
-                18,
-                2
-              )} ANDE
-            </p>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 }

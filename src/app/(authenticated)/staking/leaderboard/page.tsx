@@ -1,5 +1,7 @@
 'use client';
 
+// Note: This page uses client-side rendering only
+
 import {
   Card,
   CardContent,

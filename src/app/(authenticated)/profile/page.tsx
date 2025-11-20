@@ -25,20 +25,13 @@ import {
   History,
 } from 'lucide-react';
 import { useStaking } from '@workspace/blockchain';
+import { formatAmount } from 'packages/blockchain/utils';
 import { formatUnits } from 'viem';
 import { useState } from 'react';
 import Link from 'next/link';
 
 function formatAddress(address: string): string {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
-}
-
-function formatAmount(value: bigint, decimals: number = 18, precision: number = 4): string {
-  const formatted = formatUnits(value, decimals);
-  const num = parseFloat(formatted);
-  if (num === 0) return '0';
-  if (num < 0.0001) return '<0.0001';
-  return num.toFixed(precision);
 }
 
 export default function ProfilePage() {
@@ -156,7 +149,7 @@ export default function ProfilePage() {
                     <Skeleton className="h-6 w-32" />
                   ) : (
                     <p className="text-2xl font-bold">
-                      {balance ? parseFloat(formatUnits(balance.value, 18)).toFixed(4) : '0'} ANDE
+                      {balance ? formatAmount(balance.value) : '0'} ANDE
                     </p>
                   )}
                 </div>

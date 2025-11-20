@@ -58,8 +58,8 @@ export default function StakingMediumPage() {
 
   const { formattedBalance } = useBalance();
 
-  const userStaked = stakingData.medium ? formatAmount(stakingData.medium, 18, 4) : '0';
-  const userRewards = earnedRewards.medium ? formatAmount(earnedRewards.medium, 18, 6) : '0';
+  const userStaked = stakingData.medium ? formatAmount(stakingData.medium) : '0';
+  const userRewards = earnedRewards.medium ? formatAmount(earnedRewards.medium) : '0';
 
   const handleStake = async () => {
     if (!stakeAmount || parseFloat(stakeAmount) < parseFloat(POOL_INFO.minStake)) {

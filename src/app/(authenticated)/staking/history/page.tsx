@@ -21,6 +21,7 @@ import {
   Wallet,
 } from 'lucide-react';
 import { useAddressTransactions } from '@workspace/blockchain';
+import { formatAmount } from 'packages/blockchain/utils';
 import Link from 'next/link';
 
 // Staking contract address
@@ -226,7 +227,7 @@ export default function StakingHistoryPage() {
                           isClaim ? 'text-purple-500' :
                           'text-orange-500'
                         }`}>
-                          {isStake ? '+' : '-'}{tx.value ? (parseInt(tx.value) / 1e18).toFixed(4) : '0'} ANDE
+                          {isStake ? '+' : '-'}{tx.value ? formatAmount(BigInt(tx.value)) : '0'} ANDE
                         </p>
                         <div className="flex items-center gap-1 text-xs text-muted-foreground">
                           <Clock className="h-3 w-3" />

@@ -75,14 +75,14 @@ export default function PortfolioPage() {
 
   // Calculate totals
   const walletBalance = parseFloat(formattedBalance || '0');
-  const stakedLight = stakingData.light ? parseFloat(formatAmount(stakingData.light, 18, 4)) : 0;
-  const stakedMedium = stakingData.medium ? parseFloat(formatAmount(stakingData.medium, 18, 4)) : 0;
-  const stakedHeavy = stakingData.heavy ? parseFloat(formatAmount(stakingData.heavy, 18, 4)) : 0;
+  const stakedLight = stakingData.light ? parseFloat(formatAmount(stakingData.light)) : 0;
+  const stakedMedium = stakingData.medium ? parseFloat(formatAmount(stakingData.medium)) : 0;
+  const stakedHeavy = stakingData.heavy ? parseFloat(formatAmount(stakingData.heavy)) : 0;
   const totalStaked = stakedLight + stakedMedium + stakedHeavy;
 
-  const rewardsLight = earnedRewards.light ? parseFloat(formatAmount(earnedRewards.light, 18, 6)) : 0;
-  const rewardsMedium = earnedRewards.medium ? parseFloat(formatAmount(earnedRewards.medium, 18, 6)) : 0;
-  const rewardsHeavy = earnedRewards.heavy ? parseFloat(formatAmount(earnedRewards.heavy, 18, 6)) : 0;
+  const rewardsLight = earnedRewards.light ? parseFloat(formatAmount(earnedRewards.light)) : 0;
+  const rewardsMedium = earnedRewards.medium ? parseFloat(formatAmount(earnedRewards.medium)) : 0;
+  const rewardsHeavy = earnedRewards.heavy ? parseFloat(formatAmount(earnedRewards.heavy)) : 0;
   const totalRewards = rewardsLight + rewardsMedium + rewardsHeavy;
 
   const totalValue = walletBalance + totalStaked + totalRewards;
@@ -308,7 +308,7 @@ export default function PortfolioPage() {
                     </div>
                     <div className="text-right">
                       <p className={`font-mono text-sm ${isOutgoing ? 'text-red-500' : 'text-green-500'}`}>
-                        {isOutgoing ? '-' : '+'}{formatAmount(BigInt(tx.value), 18, 4)} ANDE
+                        {isOutgoing ? '-' : '+'}{formatAmount(BigInt(tx.value))} ANDE
                       </p>
                       <a
                         href={`https://explorer.ande.network/tx/${tx.hash}`}

@@ -1,7 +1,36 @@
-import { createConfig, http } from 'wagmi';
-import { andeNetwork, getAndeChain } from './chains';
-import { metaMask, walletConnect, coinbaseWallet, injected } from 'wagmi/connectors';
+import { getDefaultConfig } from '@rainbow-me/rainbowkit';
+import { http } from 'wagmi';
+import { getAndeChain } from './chains';
 import { QueryClient } from '@tanstack/react-query';
+import {
+  // Popular wallets
+  metaMaskWallet,
+  coinbaseWallet,
+  walletConnectWallet,
+  rainbowWallet,
+  trustWallet,
+  // Hardware wallets
+  ledgerWallet,
+  // Mobile wallets
+  argentWallet,
+  omniWallet,
+  imTokenWallet,
+  // Exchange wallets
+  okxWallet,
+  bitgetWallet,
+  binanceWallet,
+  krakenWallet,
+  // Other popular wallets
+  phantomWallet,
+  rabbyWallet,
+  safeWallet,
+  zerionWallet,
+  // Browser wallets
+  braveWallet,
+  frameWallet,
+  // Generic fallbacks
+  injectedWallet,
+} from '@rainbow-me/rainbowkit/wallets';
 
 /**
  * WalletConnect Project ID
@@ -11,7 +40,7 @@ const WALLETCONNECT_PROJECT_ID = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_I
 
 if (!WALLETCONNECT_PROJECT_ID) {
   console.warn(
-    '[ANDE] NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID not set. WalletConnect disabled.'
+    '[ANDE] NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID not set. WalletConnect may have limited functionality.'
   );
 }
 
@@ -36,57 +65,62 @@ export const queryClient = new QueryClient({
 });
 
 /**
- * ANDE Network Metadata for WalletConnect
- */
-const andeMetadata = {
-  name: 'ANDE Network',
-  description: 'The Sovereign Rollup for Latin America',
-  url: 'https://www.ande.network',
-  icons: ['https://www.ande.network/logoofical.png'],
-};
-
-/**
- * Wallet Connectors Configuration
- */
-const connectors = [
-  // Injected wallets (browser extensions)
-  injected({
-    shimDisconnect: true,
-  }),
-
-  // MetaMask
-  metaMask({
-    dappMetadata: andeMetadata,
-  }),
-
-  // Coinbase Wallet
-  coinbaseWallet({
-    appName: andeMetadata.name,
-    appLogoUrl: andeMetadata.icons[0],
-  }),
-
-  // WalletConnect (if project ID available)
-  ...(WALLETCONNECT_PROJECT_ID ? [
-    walletConnect({
-      projectId: WALLETCONNECT_PROJECT_ID,
-      metadata: andeMetadata,
-      showQrModal: true,
-    }),
-  ] : []),
-];
-
-/**
  * Get the active chain based on environment
  */
 const activeChain = getAndeChain();
 
 /**
- * Wagmi Configuration
- * Full-featured config with multiple wallet support
+ * Custom wallet groups for comprehensive wallet support
+ * WalletConnect enables 500+ additional wallets via QR code
  */
-export const wagmiConfig = createConfig({
+const wallets = [
+  {
+    groupName: 'Popular',
+    wallets: [
+      metaMaskWallet,
+      coinbaseWallet,
+      rainbowWallet,
+      trustWallet,
+      walletConnectWallet, // Supports 500+ wallets via QR code
+    ],
+  },
+  {
+    groupName: 'Exchange Wallets',
+    wallets: [
+      okxWallet,
+      binanceWallet,
+      bitgetWallet,
+      krakenWallet,
+    ],
+  },
+  {
+    groupName: 'More Wallets',
+    wallets: [
+      phantomWallet,
+      rabbyWallet,
+      zerionWallet,
+      argentWallet,
+      braveWallet,
+      ledgerWallet,
+      safeWallet,
+      frameWallet,
+      omniWallet,
+      imTokenWallet,
+      injectedWallet, // Fallback for any injected wallet
+    ],
+  },
+];
+
+/**
+ * Wagmi Configuration using RainbowKit's getDefaultConfig
+ * This properly handles SSR and provides comprehensive wallet support
+ */
+export const wagmiConfig = getDefaultConfig({
+  appName: 'ANDE Network',
+  projectId: WALLETCONNECT_PROJECT_ID || '2efb73dd51eeb4d4867c9626ec632e7e',
   chains: [activeChain],
-  connectors,
+  wallets,
+  ssr: true, // Enable SSR support for Next.js
   transports: {
     [activeChain.id]: http(activeChain.rpcUrls.default.http[0], {
       batch: {
@@ -98,10 +132,6 @@ export const wagmiConfig = createConfig({
       timeout: 20000,
     }),
   },
-  ssr: true,
-  // Multichain support ready for future
-  // Uncomment when adding more chains
-  // multiInjectedProviderDiscovery: true,
 });
 
 /**

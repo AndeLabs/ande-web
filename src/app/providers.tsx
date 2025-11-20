@@ -1,10 +1,10 @@
 'use client';
 
 import { WagmiProvider } from 'wagmi';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { wagmiConfig, queryClient } from 'packages/blockchain/config/wagmi';
-import { ReactNode } from 'react';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import { ReactNode, useState, useEffect } from 'react';
 import { RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
+import type { Config } from 'wagmi';
 
 /**
  * Custom RainbowKit theme matching ANDE brand colors
@@ -18,6 +18,24 @@ const andeTheme = darkTheme({
 });
 
 export function Providers({ children }: { children: ReactNode }) {
+  const [mounted, setMounted] = useState(false);
+  const [wagmiConfig, setWagmiConfig] = useState<Config | null>(null);
+  const [queryClient, setQueryClient] = useState<QueryClient | null>(null);
+
+  useEffect(() => {
+    // Dynamically import wagmi config to avoid SSR localStorage issues
+    import('packages/blockchain/config/wagmi').then((module) => {
+      setWagmiConfig(module.wagmiConfig);
+      setQueryClient(module.queryClient);
+      setMounted(true);
+    });
+  }, []);
+
+  // Show nothing until wagmi config is loaded (prevents SSR issues)
+  if (!mounted || !wagmiConfig || !queryClient) {
+    return null;
+  }
+
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>

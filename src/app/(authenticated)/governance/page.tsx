@@ -51,11 +51,11 @@ function VotingPowerCard() {
             <CardContent>
                 <>
                 <p className="text-5xl font-bold tracking-tight">
-                    {votingPower.data ? formatAmount(BigInt(votingPower.data), 18, 2) : '0'} ANDE
+                    {votingPower.data ? formatAmount(BigInt(votingPower.data)) : '0'} ANDE
                 </p>
                 <div className="mt-4 flex justify-center gap-6 text-muted-foreground">
                     <span>Delegated: 0</span>
-                    <span>Available: {votingPower.data ? formatAmount(BigInt(votingPower.data), 18, 2) : '0'}</span>
+                    <span>Available: {votingPower.data ? formatAmount(BigInt(votingPower.data)) : '0'}</span>
                 </div>
                 </>
             </CardContent>
@@ -124,11 +124,11 @@ function ActiveProposals() {
                     <div className="flex justify-between text-sm text-muted-foreground">
                       <div className="flex items-center gap-1">
                         <CheckCircle className="h-4 w-4 text-green-500" />
-                        <span>For: {formatAmount(proposal.forVotes, 18, 2)}</span>
+                        <span>For: {formatAmount(proposal.forVotes)}</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <XCircle className="h-4 w-4 text-red-500" />
-                        <span>Against: {formatAmount(proposal.againstVotes, 18, 2)}</span>
+                        <span>Against: {formatAmount(proposal.againstVotes)}</span>
                       </div>
                     </div>
                     <Separator />
