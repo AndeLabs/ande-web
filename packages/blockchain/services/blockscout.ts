@@ -6,7 +6,7 @@
  */
 
 // Use public URL for client-side, internal for server-side
-const BLOCKSCOUT_API_URL = process.env.NEXT_PUBLIC_BLOCKSCOUT_API_URL || 'https://explorer.ande.network/api/v2';
+const BLOCKSCOUT_API_URL = process.env.NEXT_PUBLIC_BLOCKSCOUT_API_URL || 'https://api.ande.network/api/v2';
 
 // Types for Blockscout API responses
 export interface BlockscoutStats {
