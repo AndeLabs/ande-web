@@ -2,7 +2,7 @@
  * Blockscout API Service
  *
  * Provides typed access to Blockscout REST API for ANDE Network
- * Base URL: https://explorer.ande.network/api/v2
+ * Base URL: https://api.ande.network/api/v2
  */
 
 // Use public URL for client-side, internal for server-side

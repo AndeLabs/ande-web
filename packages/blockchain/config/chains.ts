@@ -36,7 +36,7 @@ export const andeNetwork = defineChain({
     default: {
       name: 'ANDE Explorer',
       url: 'https://explorer.ande.network',
-      apiUrl: 'https://explorer.ande.network/api',
+      apiUrl: 'https://api.ande.network/api',
     },
   },
   contracts: {
