@@ -36,7 +36,7 @@ const endpoints = [
   },
   {
     name: 'Explorer API',
-    url: 'https://explorer.ande.network/api/v2',
+    url: 'https://api.ande.network/api/v2',
     description: 'Blockscout REST API',
   },
 ];
@@ -351,7 +351,7 @@ export default function ApiPage() {
               Blockscout API v2
             </CardTitle>
             <CardDescription>
-              Base URL: https://explorer.ande.network/api/v2
+              Base URL: https://api.ande.network/api/v2
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -373,7 +373,7 @@ export default function ApiPage() {
             </div>
             <div className="mt-4">
               <Button variant="outline" asChild>
-                <a href="https://explorer.ande.network/api-docs" target="_blank" rel="noopener noreferrer">
+                <a href="https://api.ande.network/api-docs" target="_blank" rel="noopener noreferrer">
                   <ExternalLink className="mr-2 h-4 w-4" />
                   Full API Documentation
                 </a>

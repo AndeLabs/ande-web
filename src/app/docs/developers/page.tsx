@@ -265,14 +265,14 @@ forge create src/MyContract.sol:MyContract \\
   --private-key $PRIVATE_KEY \\
   --verify \\
   --verifier blockscout \\
-  --verifier-url https://explorer.ande.network/api
+  --verifier-url https://api.ande.network/api
 
 # Verify existing contract
 forge verify-contract $CONTRACT_ADDRESS \\
   src/MyContract.sol:MyContract \\
   --chain-id 6174 \\
   --verifier blockscout \\
-  --verifier-url https://explorer.ande.network/api`}</code>
+  --verifier-url https://api.ande.network/api`}</code>
               </pre>
             </CardContent>
           </Card>

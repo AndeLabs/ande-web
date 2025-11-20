@@ -60,7 +60,7 @@ async function fetchABIFromBlockExplorer(address: Address): Promise<Abi | null> 
   try {
     // TODO: Implement with Ande Network explorer API
     // Example pattern for Etherscan-compatible explorers:
-    // const response = await fetch(`https://explorer.ande.network/api?module=contract&action=getabi&address=${address}`);
+    // const response = await fetch(`https://api.ande.network/api?module=contract&action=getabi&address=${address}`);
     // const data = await response.json();
     // return data.result ? JSON.parse(data.result) : null;
     
