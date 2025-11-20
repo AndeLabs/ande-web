@@ -207,10 +207,10 @@ export default function DashboardPage() {
              <CardDescription>Quick access to common actions.</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-2">
-            <Button asChild variant="outline"><Link href="/transactions/send"><Send className="mr-2 h-4 w-4" /> Send ANDE</Link></Button>
+            <Button asChild variant="outline"><Link href="/transactions"><Send className="mr-2 h-4 w-4" /> Send ANDE</Link></Button>
             <Button asChild variant="outline"><Link href="/staking"><Coins className="mr-2 h-4 w-4" /> Stake ANDE</Link></Button>
             <Button asChild variant="outline"><Link href="/governance/proposals"><Vote className="mr-2 h-4 w-4" /> Vote on Proposal</Link></Button>
-            <Button asChild variant="outline"><Link href="/defi/liquidity"><Plus className="mr-2 h-4 w-4" /> Add Liquidity</Link></Button>
+            <Button asChild variant="outline"><Link href="/defi"><Plus className="mr-2 h-4 w-4" /> Add Liquidity</Link></Button>
           </CardContent>
         </Card>
       </div>
