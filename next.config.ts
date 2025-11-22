@@ -15,21 +15,28 @@ const nextConfig: NextConfig = {
     };
 
     // Handle WalletConnect/MetaMask SDK modules that require browser APIs
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        net: false,
-        tls: false,
-      };
-    }
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      net: false,
+      tls: false,
+      crypto: false,
+      stream: false,
+      http: false,
+      https: false,
+      zlib: false,
+      path: false,
+      os: false,
+    };
 
     // Ignore problematic modules during SSR
-    config.externals = config.externals || [];
     if (isServer) {
+      config.externals = config.externals || [];
       config.externals.push({
         'pino-pretty': 'pino-pretty',
         '@react-native-async-storage/async-storage': '@react-native-async-storage/async-storage',
+        'lokijs': 'lokijs',
+        'encoding': 'encoding',
       });
     }
 

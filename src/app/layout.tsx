@@ -11,6 +11,7 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { NetworkStatusBanner } from '@/components/network-status-banner';
 import { StructuredData } from '@/components/structured-data';
+import { headers } from 'next/headers';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -83,11 +84,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Get cookie header from server and pass as string to client
+  const cookie = (await headers()).get('cookie');
+
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
@@ -99,7 +103,7 @@ export default function RootLayout({
           inter.variable
         )}
       >
-        <Providers>
+        <Providers cookie={cookie}>
           <div className="relative flex min-h-dvh flex-col">
             <Header />
             <NetworkStatusBanner />

@@ -1,7 +1,8 @@
+'use client';
+
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
-import { http } from 'wagmi';
+import { http, cookieStorage, createStorage } from 'wagmi';
 import { getAndeChain } from './chains';
-import { QueryClient } from '@tanstack/react-query';
 import {
   // Popular wallets
   metaMaskWallet,
@@ -43,26 +44,6 @@ if (!WALLETCONNECT_PROJECT_ID) {
     '[ANDE] NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID not set. WalletConnect may have limited functionality.'
   );
 }
-
-/**
- * React Query Client Configuration
- * Optimized for blockchain data with aggressive caching
- */
-export const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 60 * 1000, // 1 minute
-      gcTime: 10 * 60 * 1000, // 10 minutes
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: true,
-      retry: 3,
-      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-    },
-    mutations: {
-      retry: 1,
-    },
-  },
-});
 
 /**
  * Get the active chain based on environment
@@ -113,7 +94,8 @@ const wallets = [
 
 /**
  * Wagmi Configuration using RainbowKit's getDefaultConfig
- * This properly handles SSR and provides comprehensive wallet support
+ * Created at module level for SSR compatibility
+ * Uses cookieStorage to persist state between server and client
  */
 export const wagmiConfig = getDefaultConfig({
   appName: 'ANDE Network',
@@ -121,6 +103,9 @@ export const wagmiConfig = getDefaultConfig({
   chains: [activeChain],
   wallets,
   ssr: true, // Enable SSR support for Next.js
+  storage: createStorage({
+    storage: cookieStorage,
+  }),
   transports: {
     [activeChain.id]: http(activeChain.rpcUrls.default.http[0], {
       batch: {

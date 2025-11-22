@@ -1,10 +1,10 @@
 'use client';
 
-import { WagmiProvider } from 'wagmi';
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
-import { ReactNode, useState, useEffect } from 'react';
+import { WagmiProvider, cookieToInitialState } from 'wagmi';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactNode, useState } from 'react';
 import { RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
-import type { Config } from 'wagmi';
+import { wagmiConfig } from 'packages/blockchain/config/wagmi';
 
 /**
  * Custom RainbowKit theme matching ANDE brand colors
@@ -17,27 +17,41 @@ const andeTheme = darkTheme({
   overlayBlur: 'small',
 });
 
-export function Providers({ children }: { children: ReactNode }) {
-  const [mounted, setMounted] = useState(false);
-  const [wagmiConfig, setWagmiConfig] = useState<Config | null>(null);
-  const [queryClient, setQueryClient] = useState<QueryClient | null>(null);
+interface ProvidersProps {
+  children: ReactNode;
+  cookie: string | null;
+}
 
-  useEffect(() => {
-    // Dynamically import wagmi config to avoid SSR localStorage issues
-    import('packages/blockchain/config/wagmi').then((module) => {
-      setWagmiConfig(module.wagmiConfig);
-      setQueryClient(module.queryClient);
-      setMounted(true);
-    });
-  }, []);
+/**
+ * Providers component wrapping the app with Wagmi, RainbowKit, and React Query
+ * Uses cookieStorage for SSR compatibility
+ * QueryClient created once using useState to prevent hydration errors
+ */
+export function Providers({ children, cookie }: ProvidersProps) {
+  // Create queryClient once and reuse - prevents hydration mismatches
+  const [queryClient] = useState(
+    () => new QueryClient({
+      defaultOptions: {
+        queries: {
+          staleTime: 60 * 1000, // 1 minute
+          gcTime: 10 * 60 * 1000, // 10 minutes
+          refetchOnWindowFocus: false,
+          refetchOnReconnect: true,
+          retry: 3,
+          retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+        },
+        mutations: {
+          retry: 1,
+        },
+      },
+    })
+  );
 
-  // Show nothing until wagmi config is loaded (prevents SSR issues)
-  if (!mounted || !wagmiConfig || !queryClient) {
-    return null;
-  }
+  // Convert cookie string to initial state on client side
+  const initialState = cookie ? cookieToInitialState(wagmiConfig, cookie) : undefined;
 
   return (
-    <WagmiProvider config={wagmiConfig}>
+    <WagmiProvider config={wagmiConfig} initialState={initialState}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider
           theme={andeTheme}
