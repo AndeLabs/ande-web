@@ -20,13 +20,19 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useBalance, useStaking, useGovernance, useAddressTransactions } from 'packages/blockchain/hooks';
-import { formatAmount } from 'packages/blockchain/utils';
 import { Badge } from '@/components/ui/badge';
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAccount } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { SendAndeDialog } from '@/components/send-ande-dialog';
+import { formatAndeBalance, formatAndeBalanceFull, formatAddress } from '@/lib/formatters';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 function ConnectWalletPrompt() {
   return (
@@ -72,9 +78,20 @@ function PortfolioOverview() {
         </div>
       </CardHeader>
       <CardContent>
-        <p className="text-2xl font-bold">
-          {balance?.value ? formatAmount(balance.value) : '0'} ANDE
-        </p>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <p className="text-2xl font-bold cursor-help">
+                {balance?.value ? formatAndeBalance(balance.value) : '0 ANDE'}
+              </p>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="text-xs">
+                Full balance: {balance?.value ? formatAndeBalanceFull(balance.value) : '0'} ANDE
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         <p className="text-xs text-muted-foreground">Available balance</p>
       </CardContent>
     </Card>
@@ -114,9 +131,20 @@ function StakingSummary() {
         </div>
       </CardHeader>
       <CardContent>
-        <p className="text-2xl font-bold">
-          {formatAmount(totalStaked)} ANDE
-        </p>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <p className="text-2xl font-bold cursor-help">
+                {formatAndeBalance(totalStaked)}
+              </p>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="text-xs">
+                Full amount: {formatAndeBalanceFull(totalStaked)} ANDE
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         <p className="text-xs text-muted-foreground">Across all pools</p>
       </CardContent>
     </Card>
@@ -152,9 +180,20 @@ function GovernanceSummary() {
         </div>
       </CardHeader>
       <CardContent>
-        <p className="text-2xl font-bold">
-          {votingPower.data ? formatAmount(BigInt(votingPower.data)) : '0'} ANDE
-        </p>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <p className="text-2xl font-bold cursor-help">
+                {votingPower.data ? formatAndeBalance(BigInt(votingPower.data)) : '0 ANDE'}
+              </p>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="text-xs">
+                Full voting power: {votingPower.data ? formatAndeBalanceFull(BigInt(votingPower.data)) : '0'} ANDE
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         <p className="text-xs text-muted-foreground">
           {proposals.data?.length || 0} active proposals
         </p>
@@ -250,9 +289,20 @@ function RecentActivity() {
               >
                 <div>
                   <p className="font-medium text-sm">{txType}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {formatAmount(BigInt(tx.value))} ANDE
-                  </p>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <p className="text-xs text-muted-foreground cursor-help">
+                          {formatAndeBalance(BigInt(tx.value))}
+                        </p>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="text-xs">
+                          Exact: {formatAndeBalanceFull(BigInt(tx.value))} ANDE
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
                 <Badge
                   variant={tx.status === 'ok' ? 'default' : 'destructive'}
@@ -336,9 +386,18 @@ export default function DashboardPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold">Dashboard</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            {address?.slice(0, 6)}...{address?.slice(-4)}
-          </p>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <p className="text-sm text-muted-foreground mt-1 cursor-help">
+                  {address && formatAddress(address)}
+                </p>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="text-xs font-mono">{address}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
 

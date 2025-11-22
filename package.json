@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 9002",
+    "dev": "NODE_OPTIONS='--no-webstorage' next dev -p 9002",
     "genkit:dev": "genkit start -- tsx src/ai/dev.ts",
     "genkit:watch": "genkit start -- tsx --watch src/ai/dev.ts",
-    "build": "NODE_ENV=production next build",
-    "start": "next start",
+    "build": "NODE_ENV=production NODE_OPTIONS='--no-webstorage' next build",
+    "start": "NODE_OPTIONS='--no-webstorage' next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit"
   },
