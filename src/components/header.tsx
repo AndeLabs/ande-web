@@ -11,10 +11,8 @@ import { QuickAccessServices } from './quick-access-services';
 
 const mainNavLinks = [
   { href: '/about', label: 'About' },
-  { href: '/technology', label: 'Technology' },
   { href: '/tokenomics', label: 'Tokenomics' },
   { href: '/roadmap', label: 'Roadmap' },
-  { href: '/team', label: 'Team' },
   { href: '/docs', label: 'Docs' },
   { href: '/blog', label: 'Blog' },
 ];
